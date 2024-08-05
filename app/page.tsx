@@ -1,11 +1,5 @@
-import NotificationBar from "./_components/NotificationBar";
-
 function Home() {
-  return (
-    <div>
-      <NotificationBar />
-    </div>
-  );
+  return <div>home page</div>;
 }
 
 export default Home;
