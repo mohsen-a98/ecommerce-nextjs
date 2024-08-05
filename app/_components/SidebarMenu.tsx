@@ -6,6 +6,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Menu } from "lucide-react";
+import { MenuItem } from "./Header";
 import Link from "next/link";
 import {
   Accordion,
@@ -18,30 +19,11 @@ import { Button } from "@/components/ui/button";
 import CartIcon from "@/public/assets/Cart.svg";
 import UserIcon from "@/public/assets/User-1.svg";
 
-interface MenuItem {
-  name: string;
-  href?: string;
-  children?: MenuItem[];
+interface Props {
+  menuItems: MenuItem[];
 }
 
-const menuItems: MenuItem[] = [
-  { name: "Home", href: "/" },
-  {
-    name: "Categories",
-    children: [
-      { name: "All Categories", href: "/products" },
-      { name: "Clothes", href: "/products?category=clothes" },
-      { name: "Electronics", href: "/products?category=electronics" },
-      { name: "Furniture", href: "/products?category=furniture" },
-      { name: "Shoes", href: "/products?category=shoes" },
-      { name: "Miscellaneous", href: "/products?category=miscellaneous" },
-    ],
-  },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
-];
-
-function SidebarMenu() {
+function SidebarMenu({ menuItems }: Props) {
   return (
     <div className="md:hidden">
       <Sheet>

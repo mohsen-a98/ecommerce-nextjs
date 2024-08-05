@@ -6,31 +6,13 @@ import {
   NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import Link from "next/link";
+import { type MenuItem } from "./Header";
 
-export interface MenuItem {
-  name: string;
-  href?: string;
-  children?: MenuItem[];
+interface Props {
+  menuItems: MenuItem[];
 }
 
-const menuItems: MenuItem[] = [
-  { name: "Home", href: "/" },
-  {
-    name: "Categories",
-    children: [
-      { name: "All Categories", href: "/products" },
-      { name: "Clothes", href: "/products?category=clothes" },
-      { name: "Electronics", href: "/products?category=electronics" },
-      { name: "Furniture", href: "/products?category=furniture" },
-      { name: "Shoes", href: "/products?category=shoes" },
-      { name: "Miscellaneous", href: "/products?category=miscellaneous" },
-    ],
-  },
-  { name: "About", href: "/about" },
-  { name: "Contact", href: "/contact" },
-];
-
-function Navbar() {
+function Navbar({ menuItems }: Props) {
   return (
     <NavigationMenu className="hidden md:flex">
       <NavigationMenuList className="gap-2 text-body font-medium">
