@@ -3,6 +3,7 @@ import Features from "./_components/HomePage/Features";
 import BestSelling from "./_components/HomePage/BestSelling";
 import CategoriesCTA from "./_components/HomePage/CategoriesCTA";
 import ProductTabs from "./_components/ProductTabs";
+import NewsLetter from "./_components/NewsLetter";
 
 function Home() {
   return (
@@ -12,6 +13,7 @@ function Home() {
       <BestSelling />
       <CategoriesCTA />
       <ProductTabs />
+      <NewsLetter />
     </div>
   );
 }
