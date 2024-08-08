@@ -36,6 +36,8 @@ model Product {
   category    Category @relation(fields: [categoryId], references: [id])
   categoryId  Int
   images      String[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
   OrderItems OrderItem[]
   Comments   Comment[]
 }
