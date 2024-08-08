@@ -15,12 +15,7 @@ async function BestSelling() {
       <h3 className="text-center capitalize">best selling</h3>
       <div className="mt-10 grid grid-cols-1 justify-items-center gap-5 sm:grid-cols-2 lg:grid-cols-4">
         {bestSellingProducts.map((product) => (
-          <ProductCard
-            key={product.id}
-            image={product.images[0]}
-            name={product.name}
-            price={product.price}
-          />
+          <ProductCard key={product.id} product={product} />
         ))}
       </div>
     </section>
