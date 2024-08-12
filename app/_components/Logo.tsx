@@ -1,9 +1,9 @@
 import LogoSvg from "@/public/assets/logo.svg";
 
-function Logo() {
+function Logo({ className }: { className?: string }) {
   return (
-    <div>
-      <LogoSvg />
+    <div className={className}>
+      <LogoSvg className="size-full" />
     </div>
   );
 }
