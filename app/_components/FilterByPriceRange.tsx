@@ -11,15 +11,18 @@ function FilterByPriceRange() {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  const handleSliderChange = useDebouncedCallback((value: number[]) => {
-    setPriceRange(value);
-
+  const updateUrlParams = useDebouncedCallback((value: number[]) => {
     const params = new URLSearchParams(searchParams);
     params.set("minPrice", String(value[0]));
     params.set("maxPrice", String(value[1]));
 
     replace(`${pathname}?${params.toString()}`);
   }, 500);
+
+  const handleSliderChange = (value: number[]) => {
+    setPriceRange(value);
+    updateUrlParams(value);
+  };
 
   return (
     <div className="flex flex-col gap-4">
