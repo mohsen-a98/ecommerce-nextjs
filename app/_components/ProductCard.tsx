@@ -10,8 +10,8 @@ interface Props {
 
 function ProductCard({ product }: Props) {
   return (
-    <div className="flex h-[434px] w-[264px] flex-col gap-6 px-[14px] py-[16px]">
-      <div className="relative h-[312px] w-[237px] overflow-hidden rounded-md">
+    <div className="flex h-[434px] w-full flex-col gap-6 px-[14px] py-[16px]">
+      <div className="relative h-[312px] w-full overflow-hidden rounded-md duration-300 hover:scale-105">
         <Link href={`/products/${product.id}`}>
           <Image
             src={product.images[0]}
