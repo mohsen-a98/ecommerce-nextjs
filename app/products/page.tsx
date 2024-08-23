@@ -1,6 +1,7 @@
 import { SearchParams } from "@/lib/types";
 import AppliedFilters from "../_components/AppliedFilters";
 import FilterSidebar from "../_components/FilterSidebar";
+import ProductsList from "../_components/ProductsList";
 
 function page({ searchParams }: { searchParams: SearchParams }) {
   return (
@@ -10,6 +11,7 @@ function page({ searchParams }: { searchParams: SearchParams }) {
       </div>
       <div className="space-y-6 md:col-span-9">
         <AppliedFilters searchParams={searchParams} />
+        <ProductsList searchParams={searchParams} />
       </div>
     </div>
   );
