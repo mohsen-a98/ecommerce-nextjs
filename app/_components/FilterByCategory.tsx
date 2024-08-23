@@ -2,20 +2,21 @@
 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Category } from "@prisma/client";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import useUrlQuery from "../_hooks/useUrlQuery";
 
 interface Props {
   categories: Category[];
 }
 
 function FilterByCategory({ categories }: Props) {
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+  const [query, setQuery] = useUrlQuery();
 
   function handleCheckboxChange(categoryName: string) {
-    const params = new URLSearchParams(searchParams);
-    let selectedCategories = params.get("category")?.split("&") || [];
+    let selectedCategories: string[] = [];
+
+    if (Array.isArray(query.category)) selectedCategories = query.category;
+    else if (typeof query.category === "string")
+      selectedCategories = query.category.split("&");
 
     if (selectedCategories.includes(categoryName)) {
       selectedCategories = selectedCategories.filter(
@@ -26,17 +27,21 @@ function FilterByCategory({ categories }: Props) {
     }
 
     if (selectedCategories.length > 0) {
-      params.set("category", selectedCategories.join("&"));
+      setQuery({
+        category: selectedCategories.join("&"),
+        page: "1",
+      });
     } else {
-      params.delete("category");
+      setQuery({}, ["category"]);
     }
-
-    replace(`${pathname}?${params.toString()}`);
   }
 
   function isChecked(categoryName: string) {
-    const params = searchParams.get("category");
-    return params ? params.split("&").includes(categoryName) : false;
+    return (
+      (typeof query.category === "string" &&
+        query.category?.split("&").includes(categoryName)) ||
+      false
+    );
   }
 
   return (

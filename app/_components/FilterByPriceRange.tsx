@@ -1,22 +1,29 @@
 "use client";
 import { Slider } from "@/components/ui/slider";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
+import useUrlQuery from "../_hooks/useUrlQuery";
 
 function FilterByPriceRange() {
+  const [query, setQuery] = useUrlQuery();
   const defaultValue = [0, 50];
   const [priceRange, setPriceRange] = useState(defaultValue);
-  const searchParams = useSearchParams();
-  const pathname = usePathname();
-  const { replace } = useRouter();
+
+  useEffect(
+    function () {
+      if (query.minPrice && query.maxPrice) {
+        setPriceRange([Number(query.minPrice), Number(query.maxPrice)]);
+      }
+    },
+    [query.minPrice, query.maxPrice],
+  );
 
   const updateUrlParams = useDebouncedCallback((value: number[]) => {
-    const params = new URLSearchParams(searchParams);
-    params.set("minPrice", String(value[0]));
-    params.set("maxPrice", String(value[1]));
-
-    replace(`${pathname}?${params.toString()}`);
+    setQuery({
+      minPrice: String(value[0]),
+      maxPrice: String(value[1]),
+      page: "1",
+    });
   }, 500);
 
   const handleSliderChange = (value: number[]) => {
@@ -33,6 +40,7 @@ function FilterByPriceRange() {
         min={0}
         step={1}
         onValueChange={handleSliderChange}
+        value={priceRange}
       />
       <div className="text-body">
         Selected Range: {priceRange[0]} - {priceRange[1]}
