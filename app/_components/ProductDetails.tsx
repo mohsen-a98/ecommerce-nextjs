@@ -11,6 +11,7 @@ import { useState } from "react";
 import { useCart } from "../_context/cartContext/cartProvider";
 import { CartItem } from "../_context/cartContext/cartReducer";
 import ProductDetailsImages from "./ProductDetailsImages";
+import SlidingCart from "./SlidingCart";
 
 interface Props {
   product: Product;
@@ -18,6 +19,7 @@ interface Props {
 
 function ProductDetails({ product }: Props) {
   const [quantity, setQuantity] = useState(1);
+  const [isOpenCart, setIsOpenCart] = useState(false);
   const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
   const inCart = cart.some((item) => item.id === product.id);
 
@@ -31,6 +33,7 @@ function ProductDetails({ product }: Props) {
     };
 
     addToCart(item);
+    setIsOpenCart(true);
   }
 
   return (
@@ -107,6 +110,7 @@ function ProductDetails({ product }: Props) {
           </p>
         </div>
       </div>
+      <SlidingCart isOpen={isOpenCart} onOpenChange={setIsOpenCart} />
     </div>
   );
 }
