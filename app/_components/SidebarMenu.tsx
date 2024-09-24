@@ -1,5 +1,6 @@
 import {
   Sheet,
+  SheetClose,
   SheetContent,
   SheetHeader,
   SheetTitle,
@@ -38,7 +39,11 @@ function SidebarMenu({ menuItems }: Props) {
           <ul className="mt-8 flex flex-col divide-y rounded-md border">
             {menuItems.map((item) => (
               <li key={item.name} className="px-2 py-4 text-body font-medium">
-                {item.href && <Link href={item.href}>{item.name}</Link>}
+                {item.href && (
+                  <Link href={item.href}>
+                    <SheetClose>{item.name}</SheetClose>
+                  </Link>
+                )}
 
                 {item.children && (
                   <Accordion type="single" collapsible className="w-full">
@@ -54,7 +59,9 @@ function SidebarMenu({ menuItems }: Props) {
                               className="ml-1 px-2 py-3 text-body font-medium [&:last-child]:pb-0"
                             >
                               {child.href && (
-                                <Link href={child.href}>{child.name}</Link>
+                                <Link href={child.href}>
+                                  <SheetClose>{child.name}</SheetClose>
+                                </Link>
                               )}
                             </li>
                           ))}
