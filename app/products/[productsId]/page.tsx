@@ -1,4 +1,5 @@
 import BreadCrumbComponent from "@/app/_components/BreadCrumbComponent";
+import ProductDetails from "@/app/_components/ProductDetails";
 import prisma from "@/prisma/prisma";
 import { notFound } from "next/navigation";
 
@@ -22,6 +23,9 @@ async function page({
           additionalPaths={[product.name]}
           pathsToRemove={[productsId]}
         />
+      </div>
+      <div className="container">
+        <ProductDetails product={product} />
       </div>
     </>
   );
