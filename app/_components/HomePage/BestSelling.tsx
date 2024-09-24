@@ -3,11 +3,8 @@ import ProductCard from "../ProductCard";
 
 async function BestSelling() {
   const bestSellingProducts = await prisma.product.findMany({
-    where: {
-      id: {
-        in: [5, 10, 15, 20],
-      },
-    },
+    take: 4,
+    skip: 7,
   });
 
   return (
