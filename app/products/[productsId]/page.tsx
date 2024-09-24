@@ -1,4 +1,5 @@
 import BreadCrumbComponent from "@/app/_components/BreadCrumbComponent";
+import NewsLetter from "@/app/_components/NewsLetter";
 import ProductDetails from "@/app/_components/ProductDetails";
 import SimilarProducts from "@/app/_components/SimilarProducts";
 import prisma from "@/prisma/prisma";
@@ -31,6 +32,7 @@ async function page({
       <div className="container">
         <SimilarProducts categoryId={product.categoryId} />
       </div>
+      <NewsLetter />
     </>
   );
 }
