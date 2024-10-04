@@ -5,6 +5,7 @@ import MoreIcon from "@/public/assets/More.svg";
 import { Product } from "@prisma/client";
 import ReviewsList from "./ReviewsList";
 import SortBy from "./SortBy";
+import WriteReview from "./WriteReview";
 
 interface Props {
   product: Product;
@@ -55,7 +56,7 @@ async function ProductInfoTabs({ product }: Props) {
 
         {isAuthenticated && (
           <div className="mt-7">
-            <div>write review</div>
+            <WriteReview />
           </div>
         )}
 
