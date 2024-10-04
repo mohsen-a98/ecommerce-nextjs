@@ -1,7 +1,9 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import prisma from "@/prisma/prisma";
 import EmptyStarIcon from "@/public/assets/Empty Star.svg";
 import MoreIcon from "@/public/assets/More.svg";
 import { Product } from "@prisma/client";
+import ReviewsList from "./ReviewsList";
 import SortBy from "./SortBy";
 
 interface Props {
@@ -10,6 +12,11 @@ interface Props {
 
 async function ProductInfoTabs({ product }: Props) {
   const isAuthenticated = true;
+  const reviews = await prisma.comment.findMany({
+    where: {
+      productId: product.id,
+    },
+  });
 
   return (
     <Tabs defaultValue="details" className="md:flex md:gap-8">
@@ -64,7 +71,7 @@ async function ProductInfoTabs({ product }: Props) {
         </div>
 
         <div className="mt-1 border-b"></div>
-        <div>reviews list</div>
+        <ReviewsList reviews={reviews} />
       </TabsContent>
     </Tabs>
   );
