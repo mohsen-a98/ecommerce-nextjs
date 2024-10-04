@@ -1,6 +1,8 @@
+import React from "react";
 import BreadCrumbComponent from "@/app/_components/BreadCrumbComponent";
 import NewsLetter from "@/app/_components/NewsLetter";
 import ProductDetails from "@/app/_components/ProductDetails";
+import ProductInfoTabs from "@/app/_components/ProductInfoTabs";
 import SimilarProducts from "@/app/_components/SimilarProducts";
 import prisma from "@/prisma/prisma";
 import { notFound } from "next/navigation";
@@ -28,6 +30,9 @@ async function page({
       </div>
       <div className="container">
         <ProductDetails product={product} />
+      </div>
+      <div className="container py-44">
+        <ProductInfoTabs product={product} />
       </div>
       <div className="container">
         <SimilarProducts categoryId={product.categoryId} />
