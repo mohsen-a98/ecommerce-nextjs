@@ -1,12 +1,4 @@
-"use client";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import useUrlQuery from "../_hooks/useUrlQuery";
+import SortBy from "./SortBy";
 
 const sortOptions = [
   { value: "price-asc", label: "Price (Low to High)" },
@@ -16,28 +8,7 @@ const sortOptions = [
 ];
 
 function SortProducts() {
-  const [query, setQuery] = useUrlQuery();
-
-  function handleSortChange(value: string) {
-    setQuery({
-      sortBy: value,
-    });
-  }
-
-  return (
-    <Select onValueChange={handleSortChange} value={query.sortBy?.toString()}>
-      <SelectTrigger className="w-[120px] border-none focus:ring-0">
-        <SelectValue placeholder="SORT BY" className="text-sm" />
-      </SelectTrigger>
-      <SelectContent>
-        {sortOptions.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
-            {option.label}
-          </SelectItem>
-        ))}
-      </SelectContent>
-    </Select>
-  );
+  return <SortBy options={sortOptions} />;
 }
 
 export default SortProducts;
