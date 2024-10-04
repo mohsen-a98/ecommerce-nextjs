@@ -3,7 +3,7 @@ import Spinner from "./_components/Spinner";
 function loading() {
   return (
     <div className="py-48">
-      <Spinner />;
+      <Spinner />
     </div>
   );
 }
