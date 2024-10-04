@@ -4,6 +4,9 @@ import prisma from "@/prisma/prisma";
 import { z } from "zod";
 import { signUpFormSchema } from "./schema/signUpFormSchema";
 import bcrypt from "bcryptjs";
+import { loginFormSchema } from "./schema/loginFormSchema";
+import { signIn } from "./auth/auth";
+import { AuthError } from "next-auth";
 /**
  *  AUTH
  */
@@ -50,4 +53,24 @@ export async function signUp(data: SignUpFormData) {
     success: true,
     user: newUser,
   };
+}
+// login
+export async function login(data: z.infer<typeof loginFormSchema>) {
+  try {
+    await signIn("credentials", {
+      email: data.email,
+      password: data.password,
+      redirectTo: "/dashboard",
+    });
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case "CredentialsSignin":
+          return { error: "Invalid credentials." };
+        default:
+          return { error: "Something went wrong." };
+      }
+    }
+    throw error;
+  }
 }
