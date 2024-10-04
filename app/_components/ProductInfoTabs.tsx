@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import EmptyStarIcon from "@/public/assets/Empty Star.svg";
 import MoreIcon from "@/public/assets/More.svg";
 import { Product } from "@prisma/client";
+import SortBy from "./SortBy";
 
 interface Props {
   product: Product;
@@ -52,7 +53,14 @@ async function ProductInfoTabs({ product }: Props) {
         )}
 
         <div className="[&>button]:ml-auto">
-          <div>sort by</div>
+          <SortBy
+            options={[
+              { value: "newest", label: "Newest" },
+              { value: "oldest", label: "Oldest" },
+              { value: "highest-rating", label: "Highest Rating" },
+              { value: "lowest-rating", label: "Lowest Rating" },
+            ]}
+          />
         </div>
 
         <div className="mt-1 border-b"></div>
