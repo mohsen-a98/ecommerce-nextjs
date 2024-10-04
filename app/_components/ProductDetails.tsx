@@ -7,7 +7,7 @@ import HeartIcon from "@/public/assets/Heart.svg";
 import ShareIcon from "@/public/assets/Share.svg";
 import StarIcon from "@/public/assets/Star.svg";
 import { Product } from "@prisma/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCart } from "../_context/cartContext/cartProvider";
 import { CartItem } from "../_context/cartContext/cartReducer";
 import ProductDetailsImages from "./ProductDetailsImages";
@@ -18,10 +18,23 @@ interface Props {
 }
 
 function ProductDetails({ product }: Props) {
-  const [quantity, setQuantity] = useState(1);
   const [isOpenCart, setIsOpenCart] = useState(false);
   const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
+
+  const quantityInCart = cart.find((item) => item.id === product.id)?.quantity;
+  const [quantity, setQuantity] = useState(quantityInCart || 1);
+
   const inCart = cart.some((item) => item.id === product.id);
+
+  useEffect(
+    function () {
+      const productInCart = cart.find((item) => item.id === product.id);
+      if (productInCart) {
+        setQuantity(productInCart.quantity);
+      }
+    },
+    [cart, product.id],
+  );
 
   function handleAddToCart() {
     const item: CartItem = {
@@ -74,7 +87,7 @@ function ProductDetails({ product }: Props) {
             >
               -
             </Button>
-            <span>{quantity}</span>
+            <span>{quantityInCart || quantity}</span>
             <Button
               variant="ghost"
               onClick={() => {
@@ -114,5 +127,4 @@ function ProductDetails({ product }: Props) {
     </div>
   );
 }
-
 export default ProductDetails;
