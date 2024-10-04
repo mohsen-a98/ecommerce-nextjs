@@ -26,7 +26,7 @@ function HeaderIcons() {
 
       <SlidingCart isOpen={isOpenCart} onOpenChange={setIsOpenCart} />
 
-      <Link href={"/profile"}>
+      <Link href={"/dashboard"}>
         <UserIcon className="size-6 cursor-pointer" />
       </Link>
     </div>
