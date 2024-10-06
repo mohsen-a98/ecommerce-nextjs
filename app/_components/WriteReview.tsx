@@ -11,10 +11,13 @@ import {
 } from "@/components/ui/dialog";
 import CloseIcon from "@/public/assets/X.svg";
 import WriteReviewForm from "./WriteReviewForm";
+import { useState } from "react";
 
 function WriteReview() {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
-    <Dialog>
+    <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger>
         <Button variant="outline">Write a Review</Button>
       </DialogTrigger>
@@ -25,7 +28,7 @@ function WriteReview() {
             <CloseIcon />
           </DialogClose>
         </DialogHeader>
-        <WriteReviewForm />
+        <WriteReviewForm onClose={() => setIsOpen(false)} />
       </DialogContent>
     </Dialog>
   );

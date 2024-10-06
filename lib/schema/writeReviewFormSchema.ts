@@ -15,3 +15,8 @@ export const writeReviewFormSchema = z.object({
     .min(1, "Rating must be at least 1")
     .max(5, "Rating can't exceed 5"),
 });
+
+export const writeReviewFormSchemaWithProductId = writeReviewFormSchema.extend({
+  productId: z.number().min(1, "Required"),
+  userId: z.number().min(1, "Required"),
+});

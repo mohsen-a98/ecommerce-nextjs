@@ -6,13 +6,15 @@ import { Product } from "@prisma/client";
 import ReviewsList from "./ReviewsList";
 import SortBy from "./SortBy";
 import WriteReview from "./WriteReview";
+import { auth } from "@/lib/auth/auth";
 
 interface Props {
   product: Product;
 }
 
 async function ProductInfoTabs({ product }: Props) {
-  const isAuthenticated = true;
+  const session = await auth();
+  const isAuthenticated = !!session?.user;
   const reviews = await prisma.comment.findMany({
     where: {
       productId: product.id,

@@ -5,6 +5,7 @@ import Header from "./_components/Header";
 import NotificationBar from "./_components/NotificationBar";
 import Footer from "./_components/Footer";
 import { CartProvider } from "./_context/cartContext/cartProvider";
+import { SessionProvider } from "next-auth/react";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -21,12 +22,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <CartProvider>
-          <NotificationBar />
-          <Header />
-          <main>{children}</main>
-          <Footer />
-        </CartProvider>
+        <SessionProvider>
+          <CartProvider>
+            <NotificationBar />
+            <Header />
+            <main>{children}</main>
+            <Footer />
+          </CartProvider>
+        </SessionProvider>
       </body>
     </html>
   );

@@ -1,12 +1,59 @@
 "use server";
 
 import prisma from "@/prisma/prisma";
-import { z } from "zod";
-import { signUpFormSchema } from "./schema/signUpFormSchema";
+import { Comment } from "@prisma/client";
 import bcrypt from "bcryptjs";
-import { loginFormSchema } from "./schema/loginFormSchema";
-import { signIn } from "./auth/auth";
 import { AuthError } from "next-auth";
+import { revalidatePath } from "next/cache";
+import { z } from "zod";
+import { signIn } from "./auth/auth";
+import { loginFormSchema } from "./schema/loginFormSchema";
+import { signUpFormSchema } from "./schema/signUpFormSchema";
+import { writeReviewFormSchemaWithProductId } from "./schema/writeReviewFormSchema";
+
+/**
+ * WRITE REVIEW
+ */
+type ReviewData = z.infer<typeof writeReviewFormSchemaWithProductId>;
+export async function addReview(reviewData: ReviewData) {
+  const validatedFormData =
+    writeReviewFormSchemaWithProductId.safeParse(reviewData);
+
+  if (!validatedFormData.success) {
+    return {
+      success: false,
+      errors: validatedFormData.error.flatten().fieldErrors,
+    };
+  }
+  const { name, email, rating, review, userId, productId } =
+    validatedFormData.data;
+  let newReview: Comment;
+  try {
+    newReview = await prisma.comment.create({
+      data: {
+        name,
+        email,
+        rating,
+        review,
+        userId,
+        productId,
+      },
+    });
+  } catch (error) {
+    return {
+      success: false,
+      errors: {
+        review: "Something went wrong",
+      },
+    };
+  }
+  revalidatePath(`/products/${productId}`);
+  return {
+    success: true,
+    review: newReview,
+  };
+}
+
 /**
  *  AUTH
  */
@@ -54,6 +101,7 @@ export async function signUp(data: SignUpFormData) {
     user: newUser,
   };
 }
+
 // login
 export async function login(data: z.infer<typeof loginFormSchema>) {
   try {

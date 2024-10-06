@@ -5,9 +5,10 @@ import { useState } from "react";
 
 interface Props {
   onRatingChange: (rating: number) => void;
+  disabled?: boolean;
 }
 
-function StarRating({ onRatingChange }: Props) {
+function StarRating({ onRatingChange, disabled }: Props) {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
 
@@ -18,11 +19,13 @@ function StarRating({ onRatingChange }: Props) {
         return (
           <span
             key={index}
-            onMouseEnter={() => setHover(starValue)}
-            onMouseLeave={() => setHover(0)}
+            onMouseEnter={() => !disabled && setHover(starValue)}
+            onMouseLeave={() => !disabled && setHover(0)}
             onClick={() => {
-              setRating(starValue);
-              onRatingChange(starValue);
+              if (!disabled) {
+                setRating(starValue);
+                onRatingChange(starValue);
+              }
             }}
           >
             {starValue <= (hover || rating) ? (
