@@ -43,6 +43,7 @@ function ProductDetails({ product }: Props) {
       quantity,
       price: product.price,
       images: product.images,
+      description: product.description,
     };
 
     addToCart(item);
