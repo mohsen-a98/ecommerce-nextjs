@@ -13,13 +13,17 @@ export type CartAction =
   | { type: "ADD_TO_CART"; payload: CartItem }
   | { type: "REMOVE_FROM_CART"; payload: { id: number } }
   | { type: "UPDATE_QUANTITY"; payload: { id: number; quantity: number } }
-  | { type: "CLEAR_CART" };
+  | { type: "CLEAR_CART" }
+  | { type: "INITIALIZE_CART"; payload: CartItem[] };
 
 export const cartReducer = (
   state: CartState,
   action: CartAction,
 ): CartState => {
   switch (action.type) {
+    case "INITIALIZE_CART":
+      return action.payload;
+
     case "ADD_TO_CART":
       return [...state, action.payload];
 

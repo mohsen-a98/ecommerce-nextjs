@@ -1,6 +1,12 @@
 "use client";
 
-import { createContext, ReactNode, useContext, useReducer } from "react";
+import {
+  createContext,
+  ReactNode,
+  useContext,
+  useEffect,
+  useReducer,
+} from "react";
 import { CartItem, cartReducer, CartState } from "./cartReducer";
 
 const CartContext = createContext<
@@ -16,6 +22,21 @@ const CartContext = createContext<
 
 function CartProvider({ children }: { children: ReactNode }) {
   const [cart, dispatch] = useReducer(cartReducer, []);
+
+  useEffect(function () {
+    const storedCart = localStorage.getItem("cart");
+
+    if (storedCart) {
+      const parsedCart: CartState = JSON.parse(storedCart);
+      dispatch({ type: "INITIALIZE_CART", payload: parsedCart });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (cart.length > 0) {
+      localStorage.setItem("cart", JSON.stringify(cart));
+    }
+  }, [cart]);
 
   function addToCart(item: CartItem) {
     dispatch({ type: "ADD_TO_CART", payload: item });
