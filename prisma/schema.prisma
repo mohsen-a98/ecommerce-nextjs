@@ -11,17 +11,17 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
-  
 }
 
 model User {
-  id       Int       @id @default(autoincrement())
-  email    String    @unique
-  name     String
-  password String
-  role     Role      @default(USER)
+  id        Int       @id @default(autoincrement())
+  email     String    @unique
+  name      String
+  password  String
+  role      Role      @default(USER)
   Orders    Order[]
   Comments  Comment[]
+  Addresses Address[]
 }
 
 enum Role {
@@ -30,23 +30,36 @@ enum Role {
 }
 
 model Product {
-  id          Int      @id @default(autoincrement())
+  id          Int         @id @default(autoincrement())
   name        String
   description String
   price       Float
-  category    Category @relation(fields: [categoryId], references: [id])
+  category    Category    @relation(fields: [categoryId], references: [id])
   categoryId  Int
   images      String[]
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-  OrderItems OrderItem[]
-  Comments   Comment[]
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  OrderItems  OrderItem[]
+  Comments    Comment[]
 }
 
 model Category {
   id       Int       @id @default(autoincrement())
   name     String
   products Product[]
+}
+
+model Address {
+  id        Int      @id @default(autoincrement())
+  street    String
+  city      String
+  state     String
+  zipCode   String
+  country   String
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  orders    Order[]
+  createdAt DateTime @default(now())
 }
 
 model OrderItem {
@@ -62,14 +75,24 @@ model Order {
   id         Int         @id @default(autoincrement())
   totalPrice Float
   userId     Int
-  status     String
+  status     OrderStatus
+  addressId  Int
+  address    Address     @relation(fields: [addressId], references: [id])
   user       User        @relation(fields: [userId], references: [id])
   items      OrderItem[]
   createdAt  DateTime    @default(now())
 }
 
+enum OrderStatus {
+  PENDING      // سفارش در انتظار پردازش
+  PROCESSING   // سفارش در حال پردازش
+  SHIPPED      // سفارش ارسال شده است
+  DELIVERED    // سفارش تحویل داده شده است
+  CANCELLED    // سفارش لغو شده است
+}
+
 model Comment {
-  id        Int     @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   userId    Int
   productId Int
   email     String
@@ -77,6 +100,6 @@ model Comment {
   review    String
   rating    Int
   createdAt DateTime @default(now())
-  user      User    @relation(fields: [userId], references: [id])
-  product   Product @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
 }
