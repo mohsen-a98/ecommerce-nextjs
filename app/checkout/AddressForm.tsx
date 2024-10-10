@@ -73,8 +73,8 @@ function AddressForm({ address }: { address: Address | undefined }) {
           orderItems,
         );
 
-        if (!resultCheckout?.success && resultCheckout?.errors) {
-          setErrors(resultCheckout?.errors);
+        if (!resultCheckout?.success) {
+          router.push("/checkout/failed");
         }
 
         if (resultCheckout?.success) {
