@@ -64,9 +64,12 @@ function SlidingCart({
           <Link href="/cart" className={buttonVariants()}>
             View Cart
           </Link>
-          <Button variant="link" className="underline">
+          <Link
+            href="/checkout"
+            className={`${buttonVariants({ variant: "link" })} underline`}
+          >
             Checkout
-          </Button>
+          </Link>
         </div>
       </SheetContent>
     </Sheet>
