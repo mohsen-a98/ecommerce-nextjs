@@ -19,11 +19,19 @@ import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { useCart } from "../_context/cartContext/cartProvider";
+import toast from "react-hot-toast";
+import { Button } from "@/components/ui/button";
 
 interface Errors {
   [key: string]: string | string[] | undefined;
 }
-function AddressForm({ address }: { address: Address | undefined }) {
+
+interface Props {
+  address: Address | undefined;
+  isCheckout: boolean;
+}
+
+function AddressForm({ address, isCheckout }: Props) {
   const session = useSession();
   const router = useRouter();
 
@@ -66,24 +74,30 @@ function AddressForm({ address }: { address: Address | undefined }) {
       }
 
       if (resultAddress?.success && resultAddress?.address) {
-        const resultCheckout = await checkout(
-          {
-            totalPrice: totalPrice,
-            addressId: resultAddress?.address?.id,
-            userId: Number(session.data?.user?.id),
-          },
-          orderItems,
-        );
+        if (isCheckout) {
+          //checkout
+          const resultCheckout = await checkout(
+            {
+              totalPrice: totalPrice,
+              addressId: resultAddress?.address?.id,
+              userId: Number(session.data?.user?.id),
+            },
+            orderItems,
+          );
 
-        if (!resultCheckout?.success) {
-          router.push("/checkout/failed");
-        }
+          if (!resultCheckout?.success) {
+            router.push("/checkout/failed");
+          }
 
-        if (resultCheckout?.success) {
-          form.reset();
-          localStorage.removeItem("cart");
-          clearCart();
-          router.push("/checkout/successful");
+          if (resultCheckout?.success) {
+            form.reset();
+            localStorage.removeItem("cart");
+            clearCart();
+            router.push("/checkout/successful");
+          }
+        } else {
+          toast.success("Address updated successfully");
+          router.refresh();
         }
       }
     });
@@ -193,6 +207,16 @@ function AddressForm({ address }: { address: Address | undefined }) {
               <li key={key}>{value}</li>
             ))}
           </ul>
+        )}
+
+        {!isCheckout && (
+          <Button
+            type="submit"
+            disabled={isPending}
+            className="col-start-1 col-end-2 mt-10 w-36"
+          >
+            {isPending ? "Saving..." : "Save Changes"}
+          </Button>
         )}
       </form>
     </Form>
