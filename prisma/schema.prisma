@@ -14,14 +14,15 @@ datasource db {
 }
 
 model User {
-  id        Int       @id @default(autoincrement())
-  email     String    @unique
+  id        Int        @id @default(autoincrement())
+  email     String     @unique
   name      String
   password  String
-  role      Role      @default(USER)
+  role      Role       @default(USER)
   Orders    Order[]
   Comments  Comment[]
   Addresses Address[]
+  Wishlists Wishlist[]
 }
 
 enum Role {
@@ -41,6 +42,7 @@ model Product {
   updatedAt   DateTime    @updatedAt
   OrderItems  OrderItem[]
   Comments    Comment[]
+  Wishlists   Wishlist[]
 }
 
 model Category {
@@ -84,11 +86,11 @@ model Order {
 }
 
 enum OrderStatus {
-  PENDING      // سفارش در انتظار پردازش
-  PROCESSING   // سفارش در حال پردازش
-  SHIPPED      // سفارش ارسال شده است
-  DELIVERED    // سفارش تحویل داده شده است
-  CANCELLED    // سفارش لغو شده است
+  PENDING // سفارش در انتظار پردازش
+  PROCESSING // سفارش در حال پردازش
+  SHIPPED // سفارش ارسال شده است
+  DELIVERED // سفارش تحویل داده شده است
+  CANCELLED // سفارش لغو شده است
 }
 
 model Comment {
@@ -102,4 +104,13 @@ model Comment {
   createdAt DateTime @default(now())
   user      User     @relation(fields: [userId], references: [id])
   product   Product  @relation(fields: [productId], references: [id])
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+  createdAt DateTime @default(now())
 }
