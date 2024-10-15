@@ -27,7 +27,7 @@ function AddressForm({ address }: { address: Address | undefined }) {
   const session = useSession();
   const router = useRouter();
 
-  const { cart } = useCart();
+  const { cart, clearCart } = useCart();
   const totalPrice = cart.reduce(
     (acc, item) => acc + item.price * item.quantity,
     0,
@@ -43,7 +43,7 @@ function AddressForm({ address }: { address: Address | undefined }) {
   const form = useForm<z.infer<typeof addressFormSchema>>({
     resolver: zodResolver(addressFormSchema),
     defaultValues: {
-      streetAddress: address?.street || "",
+      streetAddress: address?.street ?? "",
       city: address?.city ?? "",
       state: address?.state ?? "",
       zipCode: address?.zipCode ?? "",
@@ -52,12 +52,14 @@ function AddressForm({ address }: { address: Address | undefined }) {
   });
 
   async function onSubmit(formData: z.infer<typeof addressFormSchema>) {
+    const userId = session.data?.user?.id;
+    if (!userId) {
+      return null;
+    }
+
     setErrors({});
     startTransition(async () => {
-      const resultAddress = await createAddress(
-        formData,
-        Number(session.data?.user?.id),
-      );
+      const resultAddress = await createAddress(formData, Number(userId));
 
       if (!resultAddress?.success && resultAddress?.errors) {
         setErrors(resultAddress?.errors);
@@ -80,6 +82,7 @@ function AddressForm({ address }: { address: Address | undefined }) {
         if (resultCheckout?.success) {
           form.reset();
           localStorage.removeItem("cart");
+          clearCart();
           router.push("/checkout/successful");
         }
       }
