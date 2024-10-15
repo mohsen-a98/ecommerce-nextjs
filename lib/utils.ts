@@ -18,3 +18,11 @@ export function timeFromNow(date: Date) {
   dayjs.extend(relativeTime);
   return dayjs(date).fromNow();
 }
+
+export function dateFormatter(date: Date) {
+  return new Intl.DateTimeFormat("en-us", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date);
+}
