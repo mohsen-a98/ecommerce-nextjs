@@ -7,9 +7,10 @@ import { auth } from "@/lib/auth/auth";
 
 async function page() {
   const session = await auth();
+  const userId = session?.user?.id;
   const address = await prisma.address.findMany({
     where: {
-      id: parseInt(session?.user?.id),
+      userId: parseInt(userId),
     },
   });
 
