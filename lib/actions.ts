@@ -232,3 +232,33 @@ export async function checkout(
     };
   }
 }
+
+/**
+ * WISHLIST
+ */
+
+export async function removeFromWishlist(id: number) {
+  let result: { success: boolean; error?: string };
+  try {
+    await prisma.wishlist.delete({
+      where: {
+        id,
+      },
+    });
+    result = {
+      success: true,
+    };
+  } catch (error) {
+    result = {
+      success: false,
+      error: "Something went wrong",
+    };
+  }
+
+  if (result.success) {
+    revalidatePath("/dashboard/wishlist");
+  }
+
+  return result;
+}
+

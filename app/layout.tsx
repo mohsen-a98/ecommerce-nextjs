@@ -6,6 +6,7 @@ import NotificationBar from "./_components/NotificationBar";
 import Footer from "./_components/Footer";
 import { CartProvider } from "./_context/cartContext/cartProvider";
 import { SessionProvider } from "next-auth/react";
+import { Toaster } from "react-hot-toast";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,23 @@ export default function RootLayout({
             <Header />
             <main>{children}</main>
             <Footer />
+            <Toaster
+              position="top-center"
+              gutter={12}
+              toastOptions={{
+                success: {
+                  duration: 3000,
+                },
+                error: {
+                  duration: 5000,
+                },
+                style: {
+                  fontSize: "16px",
+                  maxWidth: "500px",
+                  padding: "16px 24px",
+                },
+              }}
+            />
           </CartProvider>
         </SessionProvider>
       </body>
