@@ -48,7 +48,7 @@ function SignUpForm() {
 
     if (result?.success) {
       form.reset();
-      router.push("/");
+      router.push("/login");
     }
   }
 
