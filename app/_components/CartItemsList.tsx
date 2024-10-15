@@ -12,7 +12,7 @@ interface Props {
 
 function CartItemsList({ cart, updateQuantity, removeFromCart }: Props) {
   return (
-    <ul className="h-[60vh] space-y-8 overflow-y-scroll p-4 md:h-[65vh]">
+    <ul className="minimal-scrollbar h-[60vh] space-y-8 overflow-y-scroll p-4 md:h-[65vh]">
       {cart.map((product) => (
         <li
           key={product.id}
