@@ -10,7 +10,7 @@ import { signIn } from "./auth/auth";
 import { loginFormSchema } from "./schema/loginFormSchema";
 import { signUpFormSchema } from "./schema/signUpFormSchema";
 import { writeReviewFormSchemaWithProductId } from "./schema/writeReviewFormSchema";
-import { addressFormSchema } from "./schema/AddressFormSchema";
+import { addressFormSchema } from "./schema/addressFormSchema";
 import { changePasswordFormSchema } from "./schema/changePasswordFormSchema";
 
 /**

@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { checkout, createAddress } from "@/lib/actions";
-import { addressFormSchema } from "@/lib/schema/AddressFormSchema";
+import { addressFormSchema } from "@/lib/schema/addressFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Address } from "@prisma/client";
 import { useSession } from "next-auth/react";
