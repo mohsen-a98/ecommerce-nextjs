@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/prisma/prisma";
-import { Comment, Order, OrderItem } from "@prisma/client";
+import { Comment, Order, OrderItem, Wishlist } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
@@ -237,6 +237,47 @@ export async function checkout(
  * WISHLIST
  */
 
+export async function addToWishlist(userId: number, productId: number) {
+  let result: { success: boolean; error?: string; wishlist?: Wishlist };
+  try {
+    const existingWishlist = await prisma.wishlist.findFirst({
+      where: {
+        userId,
+        productId,
+      },
+    });
+
+    if (existingWishlist) {
+      return (result = {
+        success: false,
+        error: "Item already in wishlist",
+      });
+    }
+
+    const newWishlist = await prisma.wishlist.create({
+      data: {
+        userId,
+        productId,
+      },
+    });
+
+    result = {
+      success: true,
+      wishlist: newWishlist,
+    };
+  } catch (error) {
+    result = {
+      success: false,
+      error: "Something went wrong",
+    };
+  }
+
+  if (result.success) {
+    revalidatePath("/dashboard/wishlist");
+  }
+
+  return result;
+}
 export async function removeFromWishlist(id: number) {
   let result: { success: boolean; error?: string };
   try {
@@ -262,3 +303,22 @@ export async function removeFromWishlist(id: number) {
   return result;
 }
 
+export async function checkInWishlist(userId: number, productId: number) {
+  const wishlist = await prisma.wishlist.findFirst({
+    where: {
+      userId,
+      productId,
+    },
+  });
+
+  if (wishlist) {
+    return {
+      inWishlist: true,
+      wishlistId: wishlist.id,
+    };
+  }
+
+  return {
+    inWishlist: false,
+  };
+}

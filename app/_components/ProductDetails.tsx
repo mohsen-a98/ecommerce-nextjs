@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatCurrency } from "@/lib/utils";
 import HeartIcon from "@/public/assets/Heart.svg";
+import HeartFillIcon from "@/public/assets/heartFill.svg";
 import ShareIcon from "@/public/assets/Share.svg";
 import StarIcon from "@/public/assets/Star.svg";
 import { Product } from "@prisma/client";
@@ -12,12 +13,25 @@ import { useCart } from "../_context/cartContext/cartProvider";
 import { CartItem } from "../_context/cartContext/cartReducer";
 import ProductDetailsImages from "./ProductDetailsImages";
 import SlidingCart from "./SlidingCart";
+import {
+  addToWishlist,
+  checkInWishlist,
+  removeFromWishlist,
+} from "@/lib/actions";
+import { useSession } from "next-auth/react";
+import toast from "react-hot-toast";
 
 interface Props {
   product: Product;
 }
 
 function ProductDetails({ product }: Props) {
+  const session = useSession();
+  const [inWishlist, setInWishlist] = useState<{
+    inWishlist: boolean;
+    wishlistId?: number;
+  }>({ inWishlist: false });
+
   const [isOpenCart, setIsOpenCart] = useState(false);
   const { cart, addToCart, removeFromCart, updateQuantity } = useCart();
 
@@ -32,8 +46,18 @@ function ProductDetails({ product }: Props) {
       if (productInCart) {
         setQuantity(productInCart.quantity);
       }
+
+      const productInWishlist = async () => {
+        const userId = session.data?.user.id;
+        if (userId) {
+          const result = await checkInWishlist(parseInt(userId), product.id);
+          setInWishlist(result);
+        }
+      };
+
+      productInWishlist();
     },
-    [cart, product.id],
+    [cart, product.id, session.data?.user?.id],
   );
 
   function handleAddToCart() {
@@ -48,6 +72,34 @@ function ProductDetails({ product }: Props) {
 
     addToCart(item);
     setIsOpenCart(true);
+  }
+
+  async function handleAddToWishlist(productId: number) {
+    const userId = session.data?.user.id;
+    if (!userId) return null;
+    const result = await addToWishlist(parseInt(userId), productId);
+
+    if (!result.success && result.error) {
+      toast.error(result.error);
+    }
+
+    if (result.success) {
+      toast.success("Item added to wishlist");
+      setInWishlist({ inWishlist: true, wishlistId: result.wishlist?.id });
+    }
+  }
+
+  async function handleRemoveFromWishlist(id: number) {
+    const result = await removeFromWishlist(id);
+
+    if (!result.success && result.error) {
+      toast.error(result.error);
+    }
+
+    if (result.success) {
+      toast.success("Item removed from wishlist");
+      setInWishlist({ inWishlist: false });
+    }
   }
 
   return (
@@ -115,8 +167,19 @@ function ProductDetails({ product }: Props) {
                 Remove from cart
               </Button>
             )}
-            <div className="grid h-full place-items-center rounded border p-2">
-              <HeartIcon className="cursor-pointer" />
+            <div
+              className="grid h-full place-items-center rounded border p-2"
+              onClick={() =>
+                inWishlist.inWishlist
+                  ? handleRemoveFromWishlist(inWishlist.wishlistId!)
+                  : handleAddToWishlist(product.id)
+              }
+            >
+              {inWishlist.inWishlist ? (
+                <HeartFillIcon className="cursor-pointer" />
+              ) : (
+                <HeartIcon className="cursor-pointer" />
+              )}
             </div>
           </div>
           <p className="-translate-y-2 text-xs font-medium uppercase text-neutral-black-500">
