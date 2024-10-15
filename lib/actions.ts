@@ -11,6 +11,7 @@ import { loginFormSchema } from "./schema/loginFormSchema";
 import { signUpFormSchema } from "./schema/signUpFormSchema";
 import { writeReviewFormSchemaWithProductId } from "./schema/writeReviewFormSchema";
 import { addressFormSchema } from "./schema/AddressFormSchema";
+import { changePasswordFormSchema } from "./schema/changePasswordFormSchema";
 
 /**
  * WRITE REVIEW
@@ -121,6 +122,69 @@ export async function login(data: z.infer<typeof loginFormSchema>) {
       }
     }
     throw error;
+  }
+}
+
+// change password
+type ChangePasswordFormData = z.infer<typeof changePasswordFormSchema>;
+export async function changePassword(
+  formData: ChangePasswordFormData,
+  userId: number,
+) {
+  const validatedFormData = changePasswordFormSchema.safeParse(formData);
+
+  if (!validatedFormData.success) {
+    return {
+      success: false,
+      errors: validatedFormData.error.flatten().fieldErrors,
+    };
+  }
+
+  const { newPassword, oldPassword } = validatedFormData.data;
+
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    if (!user) {
+      return {
+        success: false,
+        errors: "User not found",
+      };
+    }
+
+    const passwordMatch = await bcrypt.compare(oldPassword, user.password);
+
+    if (!passwordMatch) {
+      return {
+        success: false,
+        errors: "Old password doesn't match",
+      };
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    const result = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return {
+      success: true,
+      user: result,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      errors: "Something went wrong",
+    };
   }
 }
 
