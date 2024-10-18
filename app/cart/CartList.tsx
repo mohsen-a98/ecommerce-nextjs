@@ -11,7 +11,7 @@ function CartList() {
   return (
     <>
       {cart.length > 0 && (
-        <ul className="minimal-scrollbar h-[55vh] space-y-8 overflow-y-scroll p-4">
+        <ul className="minimal-scrollbar max-h-[55vh] space-y-8 overflow-y-scroll p-4">
           {cart.map((product) => (
             <li key={product.id}>
               <CartItem
