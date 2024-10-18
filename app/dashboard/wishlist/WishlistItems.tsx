@@ -52,7 +52,7 @@ function WishlistItems({ wishlist }: Props) {
     <Fragment>
       <li
         key={wishlist?.id}
-        className="flex max-w-[620px] items-center gap-8 py-8"
+        className="flex max-w-[620px] flex-col items-center gap-8 py-8 md:flex-row"
       >
         <Image
           src={wishlist.product.images[0]}
@@ -79,7 +79,7 @@ function WishlistItems({ wishlist }: Props) {
           </button>
         </div>
 
-        <p className="ml-auto text-body font-medium">
+        <p className="text-body font-medium md:ml-auto">
           {formatCurrency(wishlist.product.price)}
         </p>
 

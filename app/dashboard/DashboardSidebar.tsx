@@ -11,7 +11,7 @@ function DashboardSidebar() {
   }
 
   return (
-    <aside className="flex w-[275px] flex-col gap-4 border-r border-r-neutral-200 py-14 pr-9">
+    <aside className="hidden w-[275px] flex-col gap-4 border-r border-r-neutral-200 py-14 md:flex md:pr-6 lg:pr-9">
       <DashboardSidebarItems />
       <div className="px-6 py-2">
         <button

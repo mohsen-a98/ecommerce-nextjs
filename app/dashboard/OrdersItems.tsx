@@ -15,7 +15,7 @@ function OrdersItems({ order }: Props) {
       {order.items.map((item) => (
         <li
           key={item.product.id}
-          className="flex max-w-[620px] items-center gap-8 py-8"
+          className="flex max-w-[620px] flex-col items-center gap-8 py-8 md:flex-row"
         >
           <Image
             src={item.product.images[0]}
@@ -35,7 +35,7 @@ function OrdersItems({ order }: Props) {
               {formatCurrency(item.product.price)}
             </p>
           </div>
-          <p className="ml-auto text-body font-medium capitalize underline">
+          <p className="text-body font-medium capitalize underline md:ml-auto">
             {order.status}
           </p>
           <Link

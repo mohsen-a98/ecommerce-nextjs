@@ -31,7 +31,7 @@ function DashboardSidebarItems() {
         >
           <Link href={item.href} className="flex items-center gap-3">
             <span className="size-6">{item.icon}</span>
-            <span>{item.name}</span>
+            <span className="w-max">{item.name}</span>
           </Link>
         </li>
       ))}

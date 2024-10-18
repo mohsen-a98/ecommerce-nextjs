@@ -22,7 +22,7 @@ async function page() {
   return (
     <div className="flex flex-col gap-6 pl-12">
       <h2 className="text-base font-semibold">Account Details</h2>
-      <div className="mt-10 flex w-80 flex-col gap-8">
+      <div className="mt-10 flex flex-col gap-8 sm:w-80">
         <Avatar className="size-12 rounded-full border bg-primaryPalette-100 text-primaryPalette-900">
           <AvatarFallback>{getInitials(user?.name)}</AvatarFallback>
         </Avatar>
