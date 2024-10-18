@@ -6,9 +6,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "../_context/cartContext/cartProvider";
+import { useRouter } from "next/navigation";
 
 function OrderDetails() {
   const [isPending, setIsPending] = useState(false);
+  const router = useRouter();
   const { cart } = useCart();
   const total = cart.reduce((acc, item) => acc + item.price * item.quantity, 0);
   const tax = Math.round(0.06 * total);
@@ -23,8 +25,12 @@ function OrderDetails() {
     }
   }
 
+  if (cart.length === 0) {
+    router.push("/cart");
+  }
+
   return (
-    <div className="mx-auto flex h-[430px] w-64 flex-col gap-3 px-6 py-8 sm:w-[372px] lg:mx-0">
+    <div className="mx-auto flex h-[430px] w-full flex-col gap-3 px-6 py-8 sm:w-[372px] md:mx-0 md:w-[372px]">
       <h2 className="mb-7 text-base font-semibold">Your Order</h2>
       <div className="mb-6 flex flex-col items-center justify-between gap-8 md:flex-row">
         <div className="flex items-center gap-2">

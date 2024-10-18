@@ -20,12 +20,14 @@ async function page() {
         <h1 className="text-2xl font-bold">Checkout</h1>
         <BreadCrumbComponent />
       </div>
-      <div className="container flex flex-col gap-10 py-14 lg:flex-row lg:justify-between lg:gap-0">
-        <div className="flex flex-col gap-16">
+      <div className="container flex flex-col gap-10 py-14 md:flex-row md:gap-5">
+        <div className="flex grow flex-col gap-16">
           <h2 className="text-base font-semibold">Shipping Address</h2>
-          <AddressForm address={address.at(0)} isCheckout={true} />
+          <div className="max-w-[536px]">
+            <AddressForm address={address.at(0)} isCheckout={true} />
+          </div>
         </div>
-        <div className="h-px w-full bg-neutral-white-400 lg:h-[70vh] lg:w-px"></div>
+        <div className="h-px w-full bg-neutral-white-400 md:h-[60vh] md:w-px xl:mr-20 2xl:mr-32"></div>
         <OrderDetails />
       </div>
     </Fragment>

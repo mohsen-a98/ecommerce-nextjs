@@ -107,14 +107,14 @@ function AddressForm({ address, isCheckout }: Props) {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="grid grid-cols-2 gap-4"
+        className="grid w-full grid-cols-1 gap-4 lg:grid-cols-2"
         id="address-form"
       >
         <FormField
           name="streetAddress"
           control={form.control}
           render={({ field }) => (
-            <FormItem className="col-span-2">
+            <FormItem className="lg:col-span-2">
               <FormLabel>Street Address</FormLabel>
               <FormControl>
                 <Input type="text" {...field} disabled={isPending} />
