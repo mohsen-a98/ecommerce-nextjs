@@ -110,7 +110,7 @@ export async function login(data: z.infer<typeof loginFormSchema>) {
     await signIn("credentials", {
       email: data.email,
       password: data.password,
-      redirectTo: "/dashboard",
+      redirect: false,
     });
   } catch (error) {
     if (error instanceof AuthError) {
@@ -121,7 +121,8 @@ export async function login(data: z.infer<typeof loginFormSchema>) {
           return { error: "Something went wrong." };
       }
     }
-    throw error;
+
+    return { error: "Something went wrong." };
   }
 }
 

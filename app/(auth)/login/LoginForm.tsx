@@ -14,7 +14,9 @@ import { login } from "@/lib/actions";
 import { loginFormSchema } from "@/lib/schema/loginFormSchema";
 import GoogleIcon from "@/public/assets/Google.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { getSession } from "next-auth/react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -22,6 +24,7 @@ import { z } from "zod";
 function LoginForm() {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
     defaultValues: {
@@ -34,11 +37,17 @@ function LoginForm() {
     setError("");
 
     startTransition(async () => {
-      await login(value).then((data) => {
-        if (data?.error) {
-          setError(data.error);
+      const result = await login(value);
+
+      if (result?.error) {
+        setError(result.error);
+      } else {
+        const session = await getSession();
+
+        if (session?.user) {
+          router.push("/dashboard");
         }
-      });
+      }
     });
   }
 
