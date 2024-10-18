@@ -1,6 +1,7 @@
 import { Fragment, ReactNode } from "react";
 import BreadCrumbComponent from "../_components/BreadCrumbComponent";
 import DashboardSidebar from "./DashboardSidebar";
+import SelectMenuDashboard from "./SelectMenuDashboard";
 
 function Layout({ children }: { children: ReactNode }) {
   return (
@@ -9,6 +10,7 @@ function Layout({ children }: { children: ReactNode }) {
         <h1 className="text-2xl font-bold">My Account</h1>
         <BreadCrumbComponent />
       </div>
+      <SelectMenuDashboard />
       <div className="container flex py-14">
         <DashboardSidebar />
         <div className="w-full">{children}</div>
