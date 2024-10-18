@@ -47,11 +47,17 @@ const authConfig: NextAuthConfig = {
     async authorized({ auth }) {
       return !!auth?.user;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
         token.id = user.id;
         token.role = user.role;
       }
+
+      if (trigger === "update" && session.user) {
+        token.name = session?.user?.name;
+        token.email = session?.user?.email;
+      }
+
       return token;
     },
     async session({ session, token }) {

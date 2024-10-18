@@ -12,6 +12,7 @@ import { signUpFormSchema } from "./schema/signUpFormSchema";
 import { writeReviewFormSchemaWithProductId } from "./schema/writeReviewFormSchema";
 import { addressFormSchema } from "./schema/addressFormSchema";
 import { changePasswordFormSchema } from "./schema/changePasswordFormSchema";
+import { accountFormSchema } from "./schema/accountFormSchema";
 
 /**
  * WRITE REVIEW
@@ -386,4 +387,59 @@ export async function checkInWishlist(userId: number, productId: number) {
   return {
     inWishlist: false,
   };
+}
+
+/**
+ * ACCOUNT
+ */
+
+export async function updateAccount(
+  userId: number,
+  data: z.infer<typeof accountFormSchema>,
+) {
+  const validatedFormData = accountFormSchema.safeParse(data);
+
+  if (!validatedFormData.success) {
+    return {
+      success: false,
+      errors: validatedFormData.error.flatten().fieldErrors,
+    };
+  }
+
+  try {
+    const emailAlreadyExists = await prisma.user.findUnique({
+      where: {
+        email: validatedFormData.data.email,
+      },
+    });
+
+    if (emailAlreadyExists && emailAlreadyExists.id !== userId) {
+      return {
+        success: false,
+        errors: "Email already in use",
+      };
+    }
+
+    const user = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        name: validatedFormData.data.name,
+        email: validatedFormData.data.email,
+      },
+    });
+
+    return {
+      success: true,
+      user,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      errors: {
+        account: "Something went wrong",
+      },
+    };
+  }
 }
