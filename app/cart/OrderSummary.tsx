@@ -36,11 +36,15 @@ function OrderSummary() {
         <span>{formatCurrency(total + tax)}</span>
       </div>
 
-      <Link href="/checkout">
-        <Button className="my-5 h-11 w-full" disabled={cart.length === 0}>
+      {cart.length > 0 ? (
+        <Link href="/checkout">
+          <Button className="my-5 h-11 w-full">Checkout</Button>
+        </Link>
+      ) : (
+        <Button className="my-5 h-11 w-full" disabled>
           Checkout
         </Button>
-      </Link>
+      )}
       <Link
         href="/products"
         className="mx-auto text-xs font-medium underline underline-offset-4"
