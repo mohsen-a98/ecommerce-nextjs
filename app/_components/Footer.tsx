@@ -55,9 +55,9 @@ function Footer() {
         <FooterLink
           heading="SHOP"
           links={[
-            { name: "My Account", href: "#" },
-            { name: "Checkout", href: "#" },
-            { name: "Cart", href: "#" },
+            { name: "My Account", href: "/dashboard" },
+            { name: "Checkout", href: "/checkout" },
+            { name: "Cart", href: "/cart" },
           ]}
           className="lg:col-span-2"
         />

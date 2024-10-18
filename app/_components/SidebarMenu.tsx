@@ -16,7 +16,7 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import SearchBox from "./SearchBox";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
 import CartIcon from "@/public/assets/Cart.svg";
 import UserIcon from "@/public/assets/User-1.svg";
 
@@ -75,17 +75,21 @@ function SidebarMenu({ menuItems }: Props) {
           </ul>
           <div className="mt-5 flex flex-col gap-3">
             <SearchBox />
-            <Link href={"/profile"}>
-              <Button variant={"outline"} className="w-full">
+            <Link href={"/dashboard"}>
+              <SheetClose
+                className={`${buttonVariants({ variant: "outline" })} w-full`}
+              >
                 <UserIcon className="mr-2 size-5" />
                 Profile
-              </Button>
+              </SheetClose>
             </Link>
             <Link href={"/cart"} className="">
-              <Button variant={"outline"} className="w-full">
+              <SheetClose
+                className={`${buttonVariants({ variant: "outline" })} w-full`}
+              >
                 <CartIcon className="mr-2 size-5" />
                 Cart
-              </Button>
+              </SheetClose>
             </Link>
           </div>
         </SheetContent>
