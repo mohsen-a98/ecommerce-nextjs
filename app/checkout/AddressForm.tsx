@@ -117,12 +117,7 @@ function AddressForm({ address, isCheckout }: Props) {
             <FormItem className="col-span-2">
               <FormLabel>Street Address</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  {...field}
-                  defaultValue={address?.street}
-                  disabled={isPending}
-                />
+                <Input type="text" {...field} disabled={isPending} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -135,12 +130,7 @@ function AddressForm({ address, isCheckout }: Props) {
             <FormItem>
               <FormLabel>City</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  {...field}
-                  defaultValue={address?.city}
-                  disabled={isPending}
-                />
+                <Input type="text" {...field} disabled={isPending} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -153,12 +143,7 @@ function AddressForm({ address, isCheckout }: Props) {
             <FormItem>
               <FormLabel>State</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  {...field}
-                  defaultValue={address?.state}
-                  disabled={isPending}
-                />
+                <Input type="text" {...field} disabled={isPending} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -171,12 +156,7 @@ function AddressForm({ address, isCheckout }: Props) {
             <FormItem>
               <FormLabel>Zip Code</FormLabel>
               <FormControl>
-                <Input
-                  type="number"
-                  {...field}
-                  defaultValue={address?.zipCode && parseInt(address?.zipCode)}
-                  disabled={isPending}
-                />
+                <Input type="number" {...field} disabled={isPending} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -189,12 +169,7 @@ function AddressForm({ address, isCheckout }: Props) {
             <FormItem>
               <FormLabel>Country</FormLabel>
               <FormControl>
-                <Input
-                  type="text"
-                  {...field}
-                  defaultValue={address?.country}
-                  disabled={isPending}
-                />
+                <Input type="text" {...field} disabled={isPending} />
               </FormControl>
               <FormMessage />
             </FormItem>
