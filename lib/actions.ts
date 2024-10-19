@@ -158,6 +158,12 @@ export async function changePassword(
       };
     }
 
+    if (!user.password) {
+      return {
+        success: false,
+        errors: "Password not set",
+      };
+    }
     const passwordMatch = await bcrypt.compare(oldPassword, user.password);
 
     if (!passwordMatch) {
