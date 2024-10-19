@@ -1,11 +1,27 @@
+import { auth } from "@/lib/auth/auth";
 import ChangePasswordForm from "./ChangePasswordForm";
+import prisma from "@/prisma/prisma";
+import CreatePassword from "./CreatePassword";
 
-function page() {
+async function page() {
+  const session = await auth();
+  const userId = session?.user?.id;
+
+  const user = await prisma.user.findUnique({
+    where: {
+      id: parseInt(userId),
+    },
+  });
+
+  const hasPassword = user?.password ? true : false;
+
   return (
     <div className="flex flex-col gap-6 pl-12">
-      <h2 className="text-base font-semibold">Change Password</h2>
+      <h2 className="text-base font-semibold">
+        {hasPassword ? "Change Password" : "Create Password"}
+      </h2>
       <div className="mt-12 sm:w-[350px]">
-        <ChangePasswordForm />
+        {hasPassword ? <ChangePasswordForm /> : <CreatePassword />}
       </div>
     </div>
   );

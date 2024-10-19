@@ -11,7 +11,10 @@ import { loginFormSchema } from "./schema/loginFormSchema";
 import { signUpFormSchema } from "./schema/signUpFormSchema";
 import { writeReviewFormSchemaWithProductId } from "./schema/writeReviewFormSchema";
 import { addressFormSchema } from "./schema/addressFormSchema";
-import { changePasswordFormSchema } from "./schema/changePasswordFormSchema";
+import {
+  changePasswordFormSchema,
+  createPasswordFormSchema,
+} from "./schema/changePasswordFormSchema";
 import { accountFormSchema } from "./schema/accountFormSchema";
 
 /**
@@ -86,8 +89,6 @@ export async function signUp(data: SignUpFormData) {
         errors: "Email already exists",
       };
     }
-    };
-  }
 
     const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -202,6 +203,65 @@ export async function changePassword(
   }
 }
 
+// create password
+type CreatePasswordFormData = Omit<
+  z.infer<typeof changePasswordFormSchema>,
+  "oldPassword"
+>;
+export async function createPassword(
+  formData: CreatePasswordFormData,
+  userId: number,
+) {
+  const validatedFormData = createPasswordFormSchema.safeParse(formData);
+
+  if (!validatedFormData.success) {
+    return {
+      success: false,
+      errors: validatedFormData.error.flatten().fieldErrors,
+    };
+  }
+
+  const { newPassword } = validatedFormData.data;
+
+  const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+  try {
+    const result = await prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        password: hashedPassword,
+      },
+    });
+
+    return {
+      success: true,
+      user: result,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      errors: "Something went wrong",
+    };
+  }
+}
+
+// has password
+export async function existedPassword(userId: number) {
+  try {
+    const exist = await prisma.user.findUnique({
+      where: {
+        id: userId,
+      },
+    });
+
+    return exist?.password ? true : false;
+  } catch (error) {
+    console.log(error);
+    return false;
+  }
+}
 /**
  *  ADDRESS
  */
