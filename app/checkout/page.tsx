@@ -4,6 +4,11 @@ import OrderDetails from "./OrderDetails";
 import AddressForm from "./AddressForm";
 import prisma from "@/prisma/prisma";
 import { auth } from "@/lib/auth/auth";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Checkout",
+};
 
 async function page() {
   const session = await auth();

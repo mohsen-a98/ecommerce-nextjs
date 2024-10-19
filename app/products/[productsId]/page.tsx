@@ -7,6 +7,22 @@ import SimilarProducts from "@/app/_components/SimilarProducts";
 import prisma from "@/prisma/prisma";
 import { notFound } from "next/navigation";
 
+export async function generateMetadata({
+  params,
+}: {
+  params: { productsId: string };
+}) {
+  const product = await prisma.product.findUnique({
+    where: {
+      id: parseInt(params.productsId),
+    },
+  });
+
+  return {
+    title: product?.name,
+  };
+}
+
 async function page({
   params: { productsId },
 }: {

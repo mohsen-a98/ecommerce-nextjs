@@ -1,6 +1,11 @@
 import AddressForm from "@/app/checkout/AddressForm";
 import { auth } from "@/lib/auth/auth";
 import prisma from "@/prisma/prisma";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Address",
+};
 
 async function page() {
   const session = await auth();

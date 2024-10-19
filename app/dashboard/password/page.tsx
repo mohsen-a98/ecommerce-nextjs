@@ -2,7 +2,11 @@ import { auth } from "@/lib/auth/auth";
 import ChangePasswordForm from "./ChangePasswordForm";
 import prisma from "@/prisma/prisma";
 import CreatePassword from "./CreatePassword";
+import { Metadata } from "next";
 
+export const metadata: Metadata = {
+  title: "Password",
+};
 async function page() {
   const session = await auth();
   const userId = session?.user?.id;

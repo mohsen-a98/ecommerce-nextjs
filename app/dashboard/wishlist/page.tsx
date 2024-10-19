@@ -3,6 +3,11 @@ import prisma from "@/prisma/prisma";
 import { Fragment } from "react";
 import EmptyWishlist from "./EmptyWishlist";
 import WishlistItems from "./WishlistItems";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Wishlist",
+};
 
 async function page() {
   const session = await auth();

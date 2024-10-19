@@ -2,6 +2,14 @@ import { Fragment, ReactNode } from "react";
 import BreadCrumbComponent from "../_components/BreadCrumbComponent";
 import DashboardSidebar from "./DashboardSidebar";
 import SelectMenuDashboard from "./SelectMenuDashboard";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    default: "Dashboard",
+    template: "Dashboard | %s",
+  },
+};
 
 function Layout({ children }: { children: ReactNode }) {
   return (

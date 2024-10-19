@@ -3,6 +3,11 @@ import AppliedFilters from "../_components/AppliedFilters";
 import FilterSidebar from "../_components/FilterSidebar";
 import ProductsList from "../_components/ProductsList";
 import BreadCrumbComponent from "../_components/BreadCrumbComponent";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Products",
+};
 
 function page({ searchParams }: { searchParams: SearchParams }) {
   return (

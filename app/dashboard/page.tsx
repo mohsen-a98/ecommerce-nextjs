@@ -3,6 +3,13 @@ import prisma from "@/prisma/prisma";
 import { Fragment } from "react";
 import EmptyOrders from "./EmptyOrders";
 import OrdersItems from "./OrdersItems";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: {
+    absolute: "Dashboard | Orders",
+  },
+};
 
 async function page() {
   const session = await auth();

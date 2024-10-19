@@ -1,6 +1,11 @@
 import { Fragment } from "react";
 import BreadCrumbComponent from "@/app/_components/BreadCrumbComponent";
 import SignUpForm from "@/app/(auth)/sign-up/SignUpForm";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Sign Up",
+};
 
 function page() {
   return (

@@ -2,6 +2,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { auth } from "@/lib/auth/auth";
 import AccountForm from "./AccountForm";
 import Image from "next/image";
+import { Metadata } from "next";
 
 interface User {
   id: string;
@@ -16,6 +17,10 @@ function getInitials(name: string) {
   const initials = words.map((word) => word.charAt(0).toUpperCase());
   return initials.join(" ");
 }
+
+export const metadata: Metadata = {
+  title: "Account",
+};
 
 async function page() {
   const session = await auth();

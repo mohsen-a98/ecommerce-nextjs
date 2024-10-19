@@ -1,5 +1,10 @@
+import { Metadata } from "next";
 import CartList from "./CartList";
 import OrderSummary from "./OrderSummary";
+
+export const metadata: Metadata = {
+  title: "Cart",
+};
 
 function page() {
   return (

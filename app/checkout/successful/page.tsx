@@ -2,7 +2,12 @@ import BreadCrumbComponent from "@/app/_components/BreadCrumbComponent";
 import { Button } from "@/components/ui/button";
 import ArrowRightIcon from "@/public/assets/Arrow Right.svg";
 import SuccessfulIcon from "@/public/assets/successful.svg";
+import { Metadata } from "next";
 import Link from "next/link";
+
+export const metadata: Metadata = {
+  title: "Successful Order",
+};
 
 function page() {
   return (

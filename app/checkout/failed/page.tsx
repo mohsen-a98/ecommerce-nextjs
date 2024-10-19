@@ -3,6 +3,11 @@ import Link from "next/link";
 import ArrowRightIcon from "@/public/assets/Arrow Right.svg";
 import BreadCrumbComponent from "@/app/_components/BreadCrumbComponent";
 import FailedIcon from "@/public/assets/failed.svg";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Failed Order",
+};
 
 function page() {
   return (
