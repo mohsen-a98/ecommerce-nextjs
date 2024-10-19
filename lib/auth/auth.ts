@@ -1,5 +1,6 @@
 import NextAuth, { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
+import Google from "next-auth/providers/google";
 import prisma from "@/prisma/prisma";
 import { loginFormSchema } from "../schema/loginFormSchema";
 import bcrypt from "bcryptjs";
@@ -22,6 +23,7 @@ const authConfig: NextAuthConfig = {
 
           if (!user) return null;
 
+          if (!user.password) return null;
           const passwordMatch = await bcrypt.compare(password, user.password);
 
           if (passwordMatch)
@@ -36,6 +38,10 @@ const authConfig: NextAuthConfig = {
         return null;
       },
     }),
+    Google({
+      clientId: process.env.AUTH_GOOGLE_ID,
+      clientSecret: process.env.AUTH_GOOGLE_SECRET,
+    }),
   ],
   session: {
     strategy: "jwt",
@@ -44,6 +50,45 @@ const authConfig: NextAuthConfig = {
   },
   secret: process.env.AUTH_SECRET,
   callbacks: {
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        const userEmail = user?.email;
+
+        if (!userEmail) {
+          return false;
+        }
+        const existingUser = await prisma.user.findUnique({
+          where: {
+            email: userEmail,
+          },
+        });
+
+        if (!existingUser) {
+          if (user?.name && user?.email) {
+            const newUser = await prisma.user.create({
+              data: {
+                name: user?.name,
+                email: user?.email,
+                role: "USER",
+              },
+            });
+
+            user.id = newUser.id.toString();
+            user.role = newUser.role;
+          } else {
+            console.error("User data is incomplete");
+            return false;
+          }
+        }
+
+        if (existingUser) {
+          user.id = existingUser.id.toString();
+          user.role = existingUser.role;
+        }
+      }
+
+      return true;
+    },
     async authorized({ auth }) {
       return !!auth?.user;
     },
