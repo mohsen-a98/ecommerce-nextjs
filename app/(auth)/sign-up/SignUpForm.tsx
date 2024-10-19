@@ -14,18 +14,18 @@ import { signUp } from "@/lib/actions";
 import { signUpFormSchema } from "@/lib/schema/signUpFormSchema";
 import GoogleIcon from "@/public/assets/Google.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useTransition } from "react";
 import { useForm } from "react-hook-form";
+import toast from "react-hot-toast";
 import { z } from "zod";
 
-interface Errors {
-  [key: string]: string | string[] | undefined;
-}
 function SignUpForm() {
-  const [error, setError] = useState<Errors>({});
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
+  const [isPending2, startTransition2] = useTransition();
+
   const router = useRouter();
   const form = useForm<z.infer<typeof signUpFormSchema>>({
     resolver: zodResolver(signUpFormSchema),
@@ -37,19 +37,38 @@ function SignUpForm() {
   });
 
   async function onSubmit(value: z.infer<typeof signUpFormSchema>) {
-    setIsLoading(true);
-    setError({});
-    const result = await signUp(value);
+    await startTransition(async () => {
+      const result = await signUp(value);
 
-    setIsLoading(false);
-    if (!result?.success && result?.errors) {
-      setError(result?.errors);
-    }
+      if (!result?.success && result?.errors) {
+        if (typeof result.errors === "string") {
+          toast.error(result.errors);
+        }
 
-    if (result?.success) {
-      form.reset();
-      router.push("/login");
-    }
+        if (typeof result.errors === "object" && result.errors !== null) {
+          Object.keys(result.errors).forEach((key) => {
+            const typedKey = key as keyof typeof result.errors;
+            form.setError(typedKey, {
+              type: "custom",
+              message: (result.errors as { [key: string]: string[] })[
+                typedKey
+              ]?.[0],
+            });
+          });
+        }
+      }
+
+      if (result?.success) {
+        form.reset();
+        router.push("/login");
+      }
+    });
+  }
+
+  async function handleGoogleSignIn() {
+    await startTransition2(() => {
+      signIn("google", { redirectTo: "/dashboard" });
+    });
   }
 
   return (
@@ -57,6 +76,8 @@ function SignUpForm() {
       <button
         type="button"
         className="flex w-full items-center justify-center gap-2 rounded border border-neutral-black-200 px-6 py-3"
+        onClick={handleGoogleSignIn}
+        disabled={isPending2}
       >
         <span className="size-4">
           <GoogleIcon />
@@ -72,15 +93,6 @@ function SignUpForm() {
 
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          {error && (
-            <ul className="flex flex-col gap-2">
-              {Object.entries(error).map(([key, value]) => (
-                <li key={key} className="text-sm text-red-500">
-                  <span>{value}</span>
-                </li>
-              ))}
-            </ul>
-          )}
           <FormField
             control={form.control}
             name="name"
@@ -91,7 +103,7 @@ function SignUpForm() {
                   <Input
                     {...field}
                     className="!mt-0"
-                    disabled={isLoading}
+                    disabled={isPending}
                     required
                   />
                 </FormControl>
@@ -111,7 +123,7 @@ function SignUpForm() {
                     {...field}
                     type="email"
                     className="!mt-0"
-                    disabled={isLoading}
+                    disabled={isPending}
                     required
                   />
                 </FormControl>
@@ -131,7 +143,7 @@ function SignUpForm() {
                     {...field}
                     type="password"
                     className="!mt-0"
-                    disabled={isLoading}
+                    disabled={isPending}
                     required
                   />
                 </FormControl>
@@ -145,7 +157,7 @@ function SignUpForm() {
           </p>
 
           <Button className="h-11 w-full">
-            {isLoading ? "Creating account..." : "Create account"}
+            {isPending ? "Creating account..." : "Create account"}
           </Button>
         </form>
       </Form>

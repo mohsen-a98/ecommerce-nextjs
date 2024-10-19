@@ -73,36 +73,42 @@ export async function signUp(data: SignUpFormData) {
   }
 
   const { name, email, password } = validatedFormData.data;
-
-  const user = await prisma.user.findUnique({
-    where: {
-      email,
-    },
-  });
-
-  if (user) {
-    return {
-      success: false,
-      errors: {
-        email: "Email already exists",
+  try {
+    const user = await prisma.user.findUnique({
+      where: {
+        email,
       },
+    });
+
+    if (user) {
+      return {
+        success: false,
+        errors: "Email already exists",
+      };
+    }
     };
   }
 
-  const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
-  const newUser = await prisma.user.create({
-    data: {
-      name,
-      email,
-      password: hashedPassword,
-    },
-  });
+    const newUser = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+      },
+    });
 
-  return {
-    success: true,
-    user: newUser,
-  };
+    return {
+      success: true,
+      user: newUser,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      errors: "Something went wrong",
+    };
+  }
 }
 
 // login

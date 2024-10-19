@@ -14,7 +14,7 @@ import { login } from "@/lib/actions";
 import { loginFormSchema } from "@/lib/schema/loginFormSchema";
 import GoogleIcon from "@/public/assets/Google.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { getSession } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -24,6 +24,7 @@ import { z } from "zod";
 function LoginForm() {
   const [error, setError] = useState("");
   const [isPending, startTransition] = useTransition();
+  const [isPending2, startTransition2] = useTransition();
   const router = useRouter();
   const form = useForm<z.infer<typeof loginFormSchema>>({
     resolver: zodResolver(loginFormSchema),
@@ -51,11 +52,19 @@ function LoginForm() {
     });
   }
 
+  async function handleGoogleSignIn() {
+    await startTransition2(() => {
+      signIn("google", { redirectTo: "/dashboard" });
+    });
+  }
+
   return (
     <div className="w-80">
       <button
         type="button"
         className="flex w-full items-center justify-center gap-2 rounded border border-neutral-black-200 px-6 py-3"
+        onClick={handleGoogleSignIn}
+        disabled={isPending2}
       >
         <span className="size-4">
           <GoogleIcon />
