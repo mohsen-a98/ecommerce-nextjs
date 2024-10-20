@@ -35,6 +35,8 @@ function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (cart.length > 0) {
       localStorage.setItem("cart", JSON.stringify(cart));
+    } else {
+      localStorage.removeItem("cart");
     }
   }, [cart]);
 
@@ -44,6 +46,9 @@ function CartProvider({ children }: { children: ReactNode }) {
 
   function removeFromCart(id: number) {
     dispatch({ type: "REMOVE_FROM_CART", payload: { id } });
+
+    const updatedCart = cart.filter((item) => item.id !== id);
+    localStorage.setItem("cart", JSON.stringify(updatedCart));
   }
 
   function updateQuantity(id: number, quantity: number) {
