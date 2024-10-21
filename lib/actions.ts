@@ -515,3 +515,24 @@ export async function updateAccount(
     };
   }
 }
+
+/**
+ * SEARCH
+ */
+
+export async function search(term: string) {
+  try {
+    const products = await prisma.product.findMany({
+      where: {
+        name: {
+          contains: term,
+          mode: "insensitive",
+        },
+      },
+    });
+
+    return products;
+  } catch (error) {
+    return [];
+  }
+}

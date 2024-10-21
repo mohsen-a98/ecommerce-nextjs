@@ -1,3 +1,4 @@
+"use client";
 import {
   Sheet,
   SheetClose,
@@ -19,17 +20,22 @@ import SearchBox from "./SearchBox";
 import { buttonVariants } from "@/components/ui/button";
 import CartIcon from "@/public/assets/Cart.svg";
 import UserIcon from "@/public/assets/User-1.svg";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 
 interface Props {
   menuItems: MenuItem[];
 }
 
 function SidebarMenu({ menuItems }: Props) {
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <div className="md:hidden">
-      <Sheet>
+      <Sheet open={isOpen} onOpenChange={setIsOpen}>
         <SheetTrigger className="size-9">
-          <Menu className="size-full" />
+          <Menu className="size-full" onClick={() => setIsOpen(true)} />
         </SheetTrigger>
         <SheetContent>
           <SheetHeader>
@@ -74,7 +80,10 @@ function SidebarMenu({ menuItems }: Props) {
             ))}
           </ul>
           <div className="mt-5 flex flex-col gap-3">
-            <SearchBox />
+            <SearchModal onCloseSidebar={() => setIsOpen(false)}>
+              <SearchBox />
+            </SearchModal>
+
             <Link href={"/dashboard"}>
               <SheetClose
                 className={`${buttonVariants({ variant: "outline" })} w-full`}

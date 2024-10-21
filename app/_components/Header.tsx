@@ -1,8 +1,10 @@
+import dynamic from "next/dynamic";
 import HeaderIcons from "./HeaderIcons";
 import Logo from "./Logo";
 import Navbar from "./Navbar";
 import SearchBox from "./SearchBox";
 import SidebarMenu from "./SidebarMenu";
+const SearchModal = dynamic(() => import("./SearchModal"), { ssr: false });
 
 export interface MenuItem {
   name: string;
@@ -33,7 +35,9 @@ function Header() {
         <Logo />
         <Navbar menuItems={menuItems} />
         <div className="hidden items-center justify-between gap-8 lg:flex">
-          <SearchBox />
+          <SearchModal>
+            <SearchBox />
+          </SearchModal>
           <HeaderIcons />
         </div>
         <SidebarMenu menuItems={menuItems} />
