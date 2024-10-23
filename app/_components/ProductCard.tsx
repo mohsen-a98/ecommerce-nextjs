@@ -3,12 +3,15 @@ import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/lib/utils";
 import Link from "next/link";
 import { Product } from "@prisma/client";
+import { getLocalBase64 } from "@/lib/getLocalBase64";
 
 interface Props {
   product: Product;
 }
 
-function ProductCard({ product }: Props) {
+async function ProductCard({ product }: Props) {
+  const blurDataURL = await getLocalBase64(product.images[0]);
+
   return (
     <div className="flex h-[434px] w-full flex-col gap-6 px-[14px] py-[16px]">
       <div className="relative h-[312px] w-full overflow-hidden rounded-md duration-300 hover:scale-105">
@@ -17,6 +20,8 @@ function ProductCard({ product }: Props) {
             src={product.images[0]}
             alt={product.name}
             className="object-cover"
+            placeholder="blur"
+            blurDataURL={blurDataURL.base64}
             fill
           />
         </Link>
