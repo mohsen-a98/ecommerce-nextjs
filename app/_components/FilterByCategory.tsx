@@ -38,9 +38,8 @@ function FilterByCategory({ categories }: Props) {
 
   function isChecked(categoryName: string) {
     return (
-      (typeof query.category === "string" &&
-        query.category?.split("&").includes(categoryName)) ||
-      false
+      typeof query.category === "string" &&
+      query.category?.split("&").includes(categoryName)
     );
   }
 
