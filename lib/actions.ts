@@ -1,7 +1,7 @@
 "use server";
 
 import prisma from "@/prisma/prisma";
-import { Comment, Order, OrderItem, Wishlist } from "@prisma/client";
+import { Comment, Order, OrderItem, Prisma, Wishlist } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
@@ -16,6 +16,8 @@ import {
   createPasswordFormSchema,
 } from "./schema/changePasswordFormSchema";
 import { accountFormSchema } from "./schema/accountFormSchema";
+import { SearchParams } from "./types";
+import { PRODUCTS_PER_PAGE } from "./constant";
 
 /**
  * WRITE REVIEW
@@ -534,5 +536,96 @@ export async function search(term: string) {
     return products;
   } catch (error) {
     return [];
+  }
+}
+
+/**
+ * GET PRODUCTS BY SEARCHPARAMS
+ */
+
+export async function getProductsBySearchParams(searchParams: SearchParams) {
+  try {
+    const currentPage = Number(searchParams?.page) || 1;
+    const minPriceFilter = searchParams?.minPrice || 0;
+    const maxPriceFilter = searchParams?.maxPrice || 100;
+    const sortBy = searchParams?.sortBy || "newest";
+    const categoriesFilter =
+      typeof searchParams?.category === "string"
+        ? searchParams.category.split("&")
+        : [];
+
+    const categoriesIds = await Promise.all(
+      categoriesFilter.map(async (category) => {
+        const categoryData = await prisma.category.findFirst({
+          where: {
+            name: category,
+          },
+        });
+        return categoryData?.id;
+      }),
+    ).then((ids) => ids.filter((id) => id !== undefined));
+
+    const orderBy = () => {
+      switch (sortBy) {
+        case "price-asc":
+          return { price: "asc" as Prisma.SortOrder };
+        case "price-desc":
+          return { price: "desc" as Prisma.SortOrder };
+        case "newest":
+          return { createdAt: "desc" as Prisma.SortOrder };
+        case "oldest":
+          return { createdAt: "asc" as Prisma.SortOrder };
+        default:
+          return { createdAt: "desc" as Prisma.SortOrder };
+      }
+    };
+
+    const productsCount = await prisma.product.count({
+      where: {
+        price: {
+          gte: Number(minPriceFilter),
+          lte: Number(maxPriceFilter),
+        },
+        categoryId: {
+          in: categoriesIds.length > 0 ? categoriesIds : undefined,
+        },
+      },
+    });
+
+    const totalPages = Math.ceil(productsCount / PRODUCTS_PER_PAGE);
+
+    const adjustedCurrentPage = Math.max(1, Math.min(currentPage, totalPages));
+
+    const products = await prisma.product.findMany({
+      skip: PRODUCTS_PER_PAGE * (adjustedCurrentPage - 1),
+      take: PRODUCTS_PER_PAGE,
+      where: {
+        price: {
+          gte: Number(minPriceFilter),
+          lte: Number(maxPriceFilter),
+        },
+        categoryId: {
+          in: categoriesIds.length > 0 ? categoriesIds : undefined,
+        },
+      },
+      orderBy: orderBy(),
+    });
+
+    return {
+      products,
+      totalPages,
+      currentPage,
+      adjustedCurrentPage,
+      productsCount,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      products: [],
+      totalPages: 0,
+      currentPage: 1,
+      adjustedCurrentPage: 1,
+      productsCount: 0,
+    };
   }
 }
