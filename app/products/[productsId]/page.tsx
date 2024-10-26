@@ -1,4 +1,3 @@
-import React from "react";
 import BreadCrumbComponent from "@/app/_components/BreadCrumbComponent";
 import NewsLetter from "@/app/_components/NewsLetter";
 import ProductDetails from "@/app/_components/ProductDetails";
@@ -23,6 +22,7 @@ export async function generateMetadata({
   };
 }
 
+export const revalidate = 24 * 3600; // 24 hours
 async function page({
   params: { productsId },
 }: {
