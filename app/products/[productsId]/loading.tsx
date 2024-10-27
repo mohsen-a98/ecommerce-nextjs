@@ -4,20 +4,27 @@ function loading() {
   const similarProducts = Array.from({ length: 4 }, (_, i) => i + 1);
   return (
     <>
-      <div className="container border-t border-t-neutral-white-200 py-4">
-        <Skeleton className="h-5 w-1/3" />
+      <div className="container space-y-1 border-t border-t-neutral-white-200 py-4">
+        <Skeleton className="h-5 w-1/2 md:w-1/3" />
+        <Skeleton className="h-5 w-4/5 md:hidden" />
       </div>
       <div className="container">
         {/* Placeholder for ProductDetails */}
         <div className="grid h-fit grid-cols-1 gap-3 overflow-hidden rounded border md:grid-cols-2 lg:mx-auto lg:h-[450px] lg:w-full">
           {/* Placeholder for images */}
-          <Skeleton className="h-full w-full" />
+          <div className="relative h-[360px] md:h-[400px] lg:h-full">
+            <Skeleton className="h-full w-full" />
+          </div>
 
           <div className="flex h-full flex-col justify-around gap-6 px-5 py-3">
             <div className="flex items-center justify-between gap-3">
               {/* Placeholder for product name */}
-              <Skeleton className="h-6 w-3/4" />
-              <Skeleton className="h-6 w-6" /> {/* Placeholder for ShareIcon */}
+              <div className="flex w-3/4 flex-col gap-1">
+                <Skeleton className="h-6 w-3/4" />
+                <Skeleton className="h-6 w-3/4" />
+              </div>
+              <Skeleton className="h-6 w-6 self-start md:self-center" />{" "}
+              {/* Placeholder for ShareIcon */}
             </div>
 
             <div className="flex items-center gap-4">
