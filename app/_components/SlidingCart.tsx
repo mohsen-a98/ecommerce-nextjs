@@ -62,13 +62,14 @@ function SlidingCart({
             <span>{formatCurrency(totalPrice)}</span>
           </div>
           <Link href="/cart" className={buttonVariants()}>
-            View Cart
+            <SheetClose>View Cart</SheetClose>
           </Link>
+
           <Link
             href="/checkout"
             className={`${buttonVariants({ variant: "link" })} underline`}
           >
-            Checkout
+            <SheetClose>Checkout</SheetClose>
           </Link>
         </div>
       </SheetContent>
