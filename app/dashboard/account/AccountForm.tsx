@@ -12,7 +12,8 @@ import { Input } from "@/components/ui/input";
 import { updateAccount } from "@/lib/actions";
 import { accountFormSchema } from "@/lib/schema/accountFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
@@ -21,6 +22,7 @@ import { z } from "zod";
 function AccountForm() {
   const { data: session, update } = useSession();
   const userId = session?.user?.id;
+  const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
   const form = useForm<z.infer<typeof accountFormSchema>>({
@@ -32,6 +34,15 @@ function AccountForm() {
   });
 
   async function onSubmit(values: z.infer<typeof accountFormSchema>) {
+    const sessionUpdate = await getSession();
+    if (!sessionUpdate) {
+      router.push("/login");
+      toast.error(
+        "Your session has expired. Please sign in again to continue.",
+      );
+      return null;
+    }
+
     await startTransition(async () => {
       const result = await updateAccount(parseInt(userId), values);
 

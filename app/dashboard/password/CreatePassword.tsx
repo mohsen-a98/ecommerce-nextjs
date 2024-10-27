@@ -13,7 +13,7 @@ import { createPassword } from "@/lib/actions";
 import { createPasswordFormSchema } from "@/lib/schema/changePasswordFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Eye, EyeOff } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -25,8 +25,6 @@ function CreatePassword() {
     newPassword: false,
     confirmPassword: false,
   });
-  const session = useSession();
-  const userId = session.data?.user?.id;
 
   const router = useRouter();
 
@@ -40,6 +38,16 @@ function CreatePassword() {
   });
 
   async function onSubmit(values: z.infer<typeof createPasswordFormSchema>) {
+    const session = await getSession();
+    if (!session) {
+      router.push("/login");
+      toast.error(
+        "Your session has expired. Please sign in again to continue.",
+      );
+      return null;
+    }
+    const userId = session.user?.id;
+
     await startTransition(async () => {
       const result = await createPassword(values, parseInt(userId));
 

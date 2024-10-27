@@ -13,7 +13,7 @@ import { checkout, createAddress } from "@/lib/actions";
 import { addressFormSchema } from "@/lib/schema/addressFormSchema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Address } from "@prisma/client";
-import { useSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
@@ -32,7 +32,6 @@ interface Props {
 }
 
 function AddressForm({ address, isCheckout }: Props) {
-  const session = useSession();
   const router = useRouter();
 
   const { cart, clearCart } = useCart();
@@ -60,7 +59,16 @@ function AddressForm({ address, isCheckout }: Props) {
   });
 
   async function onSubmit(formData: z.infer<typeof addressFormSchema>) {
-    const userId = session.data?.user?.id;
+    const session = await getSession();
+    if (!session) {
+      router.push("/login");
+      toast.error(
+        "Your session has expired. Please sign in again to continue.",
+      );
+      return null;
+    }
+
+    const userId = session.user?.id;
     if (!userId) {
       return null;
     }
@@ -80,7 +88,7 @@ function AddressForm({ address, isCheckout }: Props) {
             {
               totalPrice: totalPrice,
               addressId: resultAddress?.address?.id,
-              userId: Number(session.data?.user?.id),
+              userId: Number(userId),
             },
             orderItems,
           );
