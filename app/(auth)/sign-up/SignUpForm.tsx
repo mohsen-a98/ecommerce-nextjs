@@ -156,7 +156,7 @@ function SignUpForm() {
             Policy,
           </p>
 
-          <Button className="h-11 w-full">
+          <Button className="h-11 w-full" disabled={isPending}>
             {isPending ? "Creating account..." : "Create account"}
           </Button>
         </form>

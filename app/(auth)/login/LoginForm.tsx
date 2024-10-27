@@ -126,7 +126,7 @@ function LoginForm() {
             Policy,
           </p>
 
-          <Button className="h-11 w-full">
+          <Button className="h-11 w-full" disabled={isPending}>
             {isPending ? "Logging in" : "Login"}
           </Button>
         </form>
