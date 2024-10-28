@@ -2,14 +2,12 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import prisma from "@/prisma/prisma";
 import ProductCard from "./ProductCard";
 import { ReactNode } from "react";
+import { addBlurDataURLsToProducts } from "@/lib/actions";
 
 async function ProductTabs() {
   const featuredProducts = await prisma.product.findMany({
-    where: {
-      id: {
-        in: [10, 20, 30, 40],
-      },
-    },
+    take: 4,
+    skip: 10,
   });
 
   const latestProducts = await prisma.product.findMany({
@@ -18,6 +16,14 @@ async function ProductTabs() {
     },
     take: 4,
   });
+
+  if (featuredProducts.length === 0 || latestProducts.length === 0) return null;
+
+  const featuredProductsWithBlurDataUrl =
+    await addBlurDataURLsToProducts(featuredProducts);
+
+  const latestProductsWithBlurDataUrl =
+    await addBlurDataURLsToProducts(latestProducts);
 
   return (
     <section className="container mt-36">
@@ -38,14 +44,14 @@ async function ProductTabs() {
         </TabsList>
         <TabsContent value="featured">
           <ProductsList>
-            {featuredProducts.map((product) => (
+            {featuredProductsWithBlurDataUrl.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </ProductsList>
         </TabsContent>
         <TabsContent value="latest">
           <ProductsList>
-            {latestProducts.map((product) => (
+            {latestProductsWithBlurDataUrl.map((product) => (
               <ProductCard key={product.id} product={product} />
             ))}
           </ProductsList>

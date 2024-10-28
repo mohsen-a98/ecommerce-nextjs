@@ -1,7 +1,14 @@
 "use server";
 
 import prisma from "@/prisma/prisma";
-import { Comment, Order, OrderItem, Prisma, Wishlist } from "@prisma/client";
+import {
+  Comment,
+  Order,
+  OrderItem,
+  Prisma,
+  Product,
+  Wishlist,
+} from "@prisma/client";
 import bcrypt from "bcryptjs";
 import { AuthError } from "next-auth";
 import { revalidatePath } from "next/cache";
@@ -612,18 +619,7 @@ export async function getProductsBySearchParams(searchParams: SearchParams) {
       orderBy: orderBy(),
     });
 
-    const productsWithBlurDataUrlPromise = products.map(async (product) => {
-      return {
-        ...product,
-        blurDataURL: await getLocalBase64(product.images[0])?.then(
-          (data) => data.base64,
-        ),
-      };
-    });
-
-    const productsWithBlurDataUrl = await Promise.all(
-      productsWithBlurDataUrlPromise,
-    );
+    const productsWithBlurDataUrl = await addBlurDataURLsToProducts(products);
 
     return {
       products: productsWithBlurDataUrl,
@@ -642,4 +638,16 @@ export async function getProductsBySearchParams(searchParams: SearchParams) {
       productsCount: 0,
     };
   }
+}
+
+/**
+ * GENERATE BLUR DATA URL
+ */
+export async function addBlurDataURLsToProducts(products: Product[]) {
+  const productsWithBlurDataUrlPromises = products.map(async (product) => {
+    const blurDataURL = await getLocalBase64(product.images[0]);
+    return { ...product, blurDataURL: blurDataURL.base64 };
+  });
+
+  return await Promise.all(productsWithBlurDataUrlPromises);
 }
