@@ -21,6 +21,9 @@ function useUrlQuery(
   }, [currentQuery]);
 
   useEffect(() => {
+    if (Object.keys(debouncedQuery).length === 0) {
+      return;
+    }
     const url = `${pathname}?${new URLSearchParams(debouncedQuery as any).toString()}`;
     replace(url, { scroll: false });
   }, [debouncedQuery, pathname, replace]);
