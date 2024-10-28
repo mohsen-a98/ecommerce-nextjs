@@ -1,4 +1,3 @@
-import { SearchParams } from "@/lib/types";
 import AppliedFilters from "../../_components/AppliedFilters";
 import FilterSidebar from "../../_components/FilterSidebar";
 import ProductsList from "../../_components/ProductsList";
@@ -9,7 +8,7 @@ export const metadata: Metadata = {
   title: "Products",
 };
 
-function page({ searchParams }: { searchParams: SearchParams }) {
+function page() {
   return (
     <>
       <div className="container mb-8 bg-neutral-white-200 py-5">
@@ -21,7 +20,7 @@ function page({ searchParams }: { searchParams: SearchParams }) {
         </div>
         <div className="space-y-6 md:col-span-9">
           <AppliedFilters />
-          <ProductsList searchParams={searchParams} />
+          <ProductsList />
         </div>
       </div>
     </>
