@@ -20,7 +20,7 @@ function page({ searchParams }: { searchParams: SearchParams }) {
           <FilterSidebar />
         </div>
         <div className="space-y-6 md:col-span-9">
-          <AppliedFilters searchParams={searchParams} />
+          <AppliedFilters />
           <ProductsList searchParams={searchParams} />
         </div>
       </div>
