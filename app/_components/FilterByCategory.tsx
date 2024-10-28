@@ -12,28 +12,24 @@ function FilterByCategory({ categories }: Props) {
   const [query, setQuery] = useUrlQuery();
 
   function handleCheckboxChange(categoryName: string) {
-    let selectedCategories: string[] = [];
+    const selectedCategories = Array.isArray(query.category)
+      ? query.category
+      : query.category
+        ? query.category.split("&")
+        : [];
 
-    if (Array.isArray(query.category)) selectedCategories = query.category;
-    else if (typeof query.category === "string")
-      selectedCategories = query.category.split("&");
+    const isSelected = selectedCategories.includes(categoryName);
+    const newCategories = isSelected
+      ? selectedCategories.filter((c) => c !== categoryName)
+      : [...selectedCategories, categoryName];
 
-    if (selectedCategories.includes(categoryName)) {
-      selectedCategories = selectedCategories.filter(
-        (category) => category !== categoryName,
-      );
-    } else {
-      selectedCategories.push(categoryName);
-    }
+    const updatedQuery = {
+      ...query,
+      category: newCategories.length ? newCategories.join("&") : "",
+      page: "1",
+    };
 
-    if (selectedCategories.length > 0) {
-      setQuery({
-        category: selectedCategories.join("&"),
-        page: "1",
-      });
-    } else {
-      setQuery({}, ["category"]);
-    }
+    setQuery(updatedQuery);
   }
 
   function isChecked(categoryName: string) {
