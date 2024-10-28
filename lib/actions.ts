@@ -18,6 +18,7 @@ import {
 import { accountFormSchema } from "./schema/accountFormSchema";
 import { SearchParams } from "./types";
 import { PRODUCTS_PER_PAGE } from "./constant";
+import { getLocalBase64 } from "./getLocalBase64";
 
 /**
  * WRITE REVIEW
@@ -611,8 +612,21 @@ export async function getProductsBySearchParams(searchParams: SearchParams) {
       orderBy: orderBy(),
     });
 
+    const productsWithBlurDataUrlPromise = products.map(async (product) => {
+      return {
+        ...product,
+        blurDataURL: await getLocalBase64(product.images[0])?.then(
+          (data) => data.base64,
+        ),
+      };
+    });
+
+    const productsWithBlurDataUrl = await Promise.all(
+      productsWithBlurDataUrlPromise,
+    );
+
     return {
-      products,
+      products: productsWithBlurDataUrl,
       totalPages,
       currentPage,
       adjustedCurrentPage,

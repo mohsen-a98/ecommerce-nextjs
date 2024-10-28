@@ -1,3 +1,4 @@
+"use server";
 import { getPlaiceholder } from "plaiceholder";
 export const getLocalBase64 = async (src: string) => {
   const buffer = await fetch(src).then(async (res) =>
