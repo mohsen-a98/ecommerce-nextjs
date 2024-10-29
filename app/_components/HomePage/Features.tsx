@@ -2,10 +2,16 @@ import DeliveryIcon from "@/public/assets/Delivery.svg";
 import ShieldCheckIcon from "@/public/assets/Shield Check.svg";
 import StarBadgeIcon from "@/public/assets/Star Badge.svg";
 import FeatureItem from "./FeatureItem";
+import { cn } from "@/lib/utils";
 
-function Features() {
+function Features({ className }: { className?: string }) {
   return (
-    <section className="container grid grid-cols-1 gap-12 py-14 md:grid-cols-2 md:py-[88px] lg:grid-cols-3">
+    <section
+      className={cn(
+        "container grid grid-cols-1 gap-12 py-14 md:grid-cols-2 md:py-[88px] lg:grid-cols-3",
+        className,
+      )}
+    >
       <FeatureItem
         icon={<DeliveryIcon />}
         title="Free Shipping"

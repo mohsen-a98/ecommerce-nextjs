@@ -46,8 +46,8 @@ function Footer() {
         <FooterLink
           heading="COMPANY"
           links={[
-            { name: "About us", href: "#" },
-            { name: "Contact", href: "#" },
+            { name: "About us", href: "/about-us" },
+            { name: "Contact", href: "/contact" },
             { name: "Careers", href: "#" },
           ]}
           className="lg:col-span-2"

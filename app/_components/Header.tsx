@@ -25,7 +25,7 @@ const menuItems: MenuItem[] = [
       { name: "Miscellaneous", href: "/products?category=miscellaneous" },
     ],
   },
-  { name: "About", href: "/about" },
+  { name: "About", href: "/about-us" },
   { name: "Contact", href: "/contact" },
 ];
 function Header() {
