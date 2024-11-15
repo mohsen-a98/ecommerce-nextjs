@@ -26,3 +26,36 @@ export function dateFormatter(date: Date) {
     day: "numeric",
   }).format(date);
 }
+
+/**
+ * fetchWithCacheAndExpiration
+ */
+interface CacheItem<T> {
+  data: T;
+  timestamp: number;
+}
+
+type FetchFunction<T> = () => Promise<T>;
+
+const cacheWithExpiration = new Map<string, CacheItem<any>>();
+
+export async function fetchWithCacheAndExpiration<T>(
+  key: string,
+  fetchFunction: FetchFunction<T>,
+  expirationTime: number = 1000 * 60 * 10, // 10 minutes,
+) {
+  const cached = cacheWithExpiration.get(key);
+
+  if (cached && Date.now() - cached.timestamp < expirationTime) {
+    return cached.data;
+  }
+
+  const data = await fetchFunction();
+
+  cacheWithExpiration.set(key, {
+    data,
+    timestamp: Date.now(),
+  });
+
+  return data;
+}

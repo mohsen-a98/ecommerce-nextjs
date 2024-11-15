@@ -8,6 +8,7 @@ import { Suspense, useEffect, useState } from "react";
 import PaginationComponent from "./PaginationComponent";
 import ProductCard from "./ProductCard";
 import SortProducts from "./SortProducts";
+import { fetchWithCacheAndExpiration } from "@/lib/utils";
 
 interface Data {
   products: (Product & { blurDataURL: string })[];
@@ -33,13 +34,21 @@ function ProductsList() {
   useEffect(() => {
     async function getData() {
       setIsLoading(true);
-      const result = await getProductsBySearchParams(params);
+      const cachedData = await fetchWithCacheAndExpiration(
+        JSON.stringify(params),
+        () => getProductsBySearchParams(params),
+      );
 
-      setData(result);
-      setIsLoading(false);
+      if (cachedData !== data) {
+        setData(cachedData);
+        setIsLoading(false);
+      } else {
+        setIsLoading(true);
+      }
     }
 
     getData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(params)]);
 
   const {
